@@ -1,6 +1,8 @@
 import pygame
 import os
 import time
+
+ #cokolwiek
  #asdasd
  #halaoihsaohsao
 
