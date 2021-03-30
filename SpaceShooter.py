@@ -1,7 +1,8 @@
 import pygame
 import os
 import time
-#nowy komentarz
+ #asdasd
+ #halaoihsaohsao
 
 WIDTH = 850
 HEIGHT = 850
