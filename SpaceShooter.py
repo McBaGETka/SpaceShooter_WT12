@@ -1,16 +1,17 @@
 import pygame
 import os
 import time
+import ctypes
 
- #cokolwiek
- #asdasd
- #halaoihsaohsao
 
-WIDTH = 850
-HEIGHT = 850
-WINDOW=pygame.display.set_mode((WIDTH,HEIGHT))
+user32 = ctypes.windll.user32
+
+
+WIDTH =  user32.GetSystemMetrics(78)
+HEIGHT =  user32.GetSystemMetrics(79)
+
 pygame.display.set_caption('SpaceShooter')
-
+WINDOW=pygame.display.set_mode((WIDTH,HEIGHT),pygame.FULLSCREEN)
 
 #player data
 PLAYER_SHIP=pygame.transform.scale(pygame.image.load(os.path.join("assets", "stateczek.png")),(100,100))
@@ -124,6 +125,8 @@ def main():
             player.y += player_vel
         if keys[pygame.K_SPACE]:
             player.shoot()
+        if keys[pygame.K_ESCAPE]:
+            run=False
 
         player.move_bullet(-10)
 
