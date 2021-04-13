@@ -12,7 +12,7 @@ WIDTH =  user32.GetSystemMetrics(78)
 HEIGHT =  user32.GetSystemMetrics(79)
 
 pygame.display.set_caption('SpaceShooter')
-WINDOW=pygame.display.set_mode((WIDTH,HEIGHT),pygame.RESIZABLE)
+WINDOW=pygame.display.set_mode((WIDTH,HEIGHT),pygame.NOFRAME)
 
 #enemy data
 ENEMY_SHIP=pygame.transform.scale(pygame.image.load(os.path.join("assets", "przeciwnik.png")),(100,100))
