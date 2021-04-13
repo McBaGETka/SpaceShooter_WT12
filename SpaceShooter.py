@@ -11,8 +11,9 @@ user32 = ctypes.windll.user32
 WIDTH =  user32.GetSystemMetrics(78)
 HEIGHT =  user32.GetSystemMetrics(79)
 
+
 pygame.display.set_caption('SpaceShooter')
-WINDOW=pygame.display.set_mode((WIDTH,HEIGHT),pygame.RESIZABLE)
+WINDOW=pygame.display.set_mode((WIDTH,HEIGHT),pygame.FULLSCREEN)
 
 #enemy data
 ENEMY_SHIP=pygame.transform.scale(pygame.image.load(os.path.join("assets", "przeciwnik.png")),(100,100))
@@ -167,7 +168,7 @@ class Enemy(Ship):
 
     def shoot(self):
         if self.cooldown_counter == 0:
-            bullet = Bullet(self.x-20, self.y, self.bullet_img)
+            bullet = Bullet(self.x+45, self.y+100, self.bullet_img)
             self.bullets.append(bullet)
             self.cooldown_counter = 1
 
@@ -266,7 +267,7 @@ def main():
             #if collide(enemy, player):
              #   player.health -= 10
              #   enemies.remove(enemy)
-            elif enemy.y + enemy.get_height() > HEIGHT:
+            elif enemy.y + enemy.get_height() > HEIGHT+100:
                 lives -= 1
                 enemies.remove(enemy)
 
