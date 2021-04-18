@@ -13,7 +13,7 @@ HEIGHT =  user32.GetSystemMetrics(79)
 
 
 pygame.display.set_caption('SpaceShooter')
-WINDOW=pygame.display.set_mode((WIDTH,HEIGHT),pygame.FULLSCREEN)
+WINDOW=pygame.display.set_mode((WIDTH,HEIGHT),pygame.NOFRAME)
 
 #enemy data
 ENEMY_SHIP=pygame.transform.scale(pygame.image.load(os.path.join("assets", "przeciwnik.png")),(100,100))
@@ -27,10 +27,16 @@ PLAYER_BULLET=pygame.transform.scale(pygame.image.load(os.path.join("assets", "p
 
 #buttons
 START_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "start_button.png")),(300,100))
+OPTIONS_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "options_button.png")),(300,100))
+EXIT_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "exit_button.png")),(300,100))
+RESOLUTION_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "exit_button.png")),(300,100))
+RES1440_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "res1_button.png")),(300,100))
+RES1920_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "res2_button.png")),(300,100))
 
 
 #background
 STARTING_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "menu.png")),(WIDTH,HEIGHT))
+OPTIONS_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "options.png")),(WIDTH,HEIGHT))
 BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "kosmos.png")),(WIDTH,HEIGHT))
 
 class Button():
@@ -185,6 +191,7 @@ def main():
     lives = 3
     player = Player(WIDTH/2-45,650)
     main_menu = True 
+    options=False
 
     enemies = []
     wave_length = 5
@@ -196,7 +203,11 @@ def main():
     lost = False
     lost_count = 0
 
-    start_button=Button(WIDTH/2-150 , HEIGHT/2+200, START_BUTTON)
+    start_button=Button(WIDTH/2-500 , HEIGHT/2+200, START_BUTTON)
+    option_button=Button(WIDTH/2-150 , HEIGHT/2+200, OPTIONS_BUTTON)
+    exit_button=Button(WIDTH/2+200 , HEIGHT/2+200, EXIT_BUTTON)
+    res1440=Button(WIDTH/2-150 , HEIGHT/2-100, RES1440_BUTTON)
+    res1920=Button(WIDTH/2-150 , HEIGHT/2+100, RES1920_BUTTON)
     clock = pygame.time.Clock()
     def redraw_w():
         WINDOW.blit(BACKGROUND, (0,0))
@@ -213,65 +224,88 @@ def main():
     while run:
         clock.tick(FPS)
         keys=pygame.key.get_pressed()
-        if main_menu == True:
-            WINDOW.blit(STARTING_BACKGROUND,(0,0))
-            if start_button.draw():
-                main_menu=False
+        if main_menu == True: #MAIN MENU LOOP
+            if options==True:
+                WINDOW.blit(OPTIONS_BACKGROUND,(0,0))
+   
+                if res1440.draw():
+                    print("1440")
+                elif res1920.draw():
+                    print("1920")
+                    
+                if keys[pygame.K_r]:
+                    options=False
+
+            else:
+                WINDOW.blit(STARTING_BACKGROUND,(0,0))
+                if start_button.draw():
+                    main_menu=False
+                elif option_button.draw():
+                    options=True
+                elif exit_button.draw():
+                    run = False
+            
+
             pygame.display.update()
             
              
-        else:
+        else: 
             redraw_w()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run=False
-        
-        if lives <= 0 or player.health <= 0:
-            lost = True
-            lost_count += 1
+            if lives <= 0 or player.health <= 0:
+                lost = True
+                lost_count += 1
 
-        #if lost:
-         #   if lost_count > FPS * 3:
-         #       run = False
-         #   else:
+            #if lost:
+             #   if lost_count > FPS * 3:
+            #       run = False
+            #   else:
            #     continue
 
-        if len(enemies) == 0:
-            level += 1
-            wave_length += 5
-            for i in range(wave_length):
-                enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500, -100), random.choice(["przeciwnik"]))
-                enemies.append(enemy)
+            if len(enemies) == 0:
+                level += 1
+                wave_length += 5
+                for i in range(wave_length):
+                    enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500, -100), random.choice(["przeciwnik"]))
+                    enemies.append(enemy)
   
 
-        if keys[pygame.K_a] and player.x - player_vel > 0:
-            player.x -= player_vel
-        if keys[pygame.K_d] and player.x + player_vel + player.get_width() < WIDTH:
-            player.x += player_vel
-        if keys[pygame.K_w] and player.y - player_vel > 0:
-            player.y -= player_vel
-        if keys[pygame.K_s] and player.y + player_vel + player.get_height() < HEIGHT:
-            player.y += player_vel
-        if keys[pygame.K_SPACE]:
-            player.shoot()
-        if keys[pygame.K_ESCAPE]:
-            run=False
+            if keys[pygame.K_a] and player.x - player_vel > 0:
+                player.x -= player_vel
+            if keys[pygame.K_d] and player.x + player_vel + player.get_width() < WIDTH:
+                player.x += player_vel
+            if keys[pygame.K_w] and player.y - player_vel > 0:
+                player.y -= player_vel
+            if keys[pygame.K_s] and player.y + player_vel + player.get_height() < HEIGHT:
+                player.y += player_vel
+            if keys[pygame.K_SPACE]:
+                player.shoot()
+            if keys[pygame.K_ESCAPE]:
+                run=False
+            if keys[pygame.K_r]:
+                main_menu=True
 
-        for enemy in enemies[:]:
-            enemy.move(enemy_vel)
-            enemy.move_bullet(bullet_vel, player)
+            for enemy in enemies[:]:
+                enemy.move(enemy_vel)
+                enemy.move_bullet(bullet_vel, player)
 
-            if random.randrange(0, 2*60) == 1:
-                enemy.shoot()
+                if random.randrange(0, 2*60) == 1:
+                    enemy.shoot()
 
             #if collide(enemy, player):
              #   player.health -= 10
              #   enemies.remove(enemy)
-            elif enemy.y + enemy.get_height() > HEIGHT+100:
-                lives -= 1
-                enemies.remove(enemy)
+                elif enemy.y + enemy.get_height() > HEIGHT+100:
+                    lives -= 1
+                    enemies.remove(enemy)
 
-        player.move_bullet(-10, enemies)
+        
+        
+        
+
+        player.move_bullet(-10, enemies) # to juz nie jest main game loop
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run=False
             
 main()
 
