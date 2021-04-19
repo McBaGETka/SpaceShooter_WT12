@@ -30,8 +30,8 @@ START_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "st
 OPTIONS_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "options_button.png")),(300,100))
 EXIT_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "exit_button.png")),(300,100))
 RESOLUTION_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "exit_button.png")),(300,100))
-RES1440_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "res1_button.png")),(300,100))
-RES1920_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "res2_button.png")),(300,100))
+RES1440_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "options_button.png")),(300,100))
+RES1920_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "options_button.png")),(300,100))
 
 
 #background
@@ -82,8 +82,8 @@ class Bullet:
     def off_screen(self, height):
         return not self.y <= height and self.y >= 0
 
-#    def collision(self, obj):
-#        return collide(self, obj)
+    def collision(self, obj):
+        return collide(self, obj)
 
 
 class Ship:
@@ -115,9 +115,9 @@ class Ship:
             bullet.move(vel)
             if bullet.off_screen(HEIGHT):
                 self.bullets.remove(bullet)
-    #        elif bullet.collision(obj):
-    #            obj.health -= 10
-    #            self.bullets.remove(bullet)
+            elif bullet.collision(obj):
+                obj.health -= 10
+                self.bullets.remove(bullet)
 
    
            
@@ -149,22 +149,24 @@ class Player(Ship):
             bullet.move(vel)
             if bullet.off_screen(HEIGHT):
                 self.bullets.remove(bullet)
-         #   else:
-          #     for obj in objs:
-          #          if bullet.collision(obj):
-          #              objs.remove(obj)
-          #              if bullet in self.bullets:
-          #                  self.bullets.remove(bullet)
+            else:
+                for obj in objs:
+                    if bullet.collision(obj):
+                        objs.remove(obj)
+                        if bullet in self.bullets:
+                            self.bullets.remove(bullet)
+
+                 
           
- #  def draw(self, window):
- #      super().draw(window)
- #      self.healthbar(window)
+    def draw(self, window):
+        super().draw(window)
+        self.healthbar(window)
 
 
 
-#   def healthbar(self, window):
-#       pygame.draw.rect(window, (255,0,0), (self.x, self.y + self.ship_img.get_height() + 10, self.ship_img.get_width(), 10))
-#        pygame.draw.rect(window, (0,255,0), (self.x, self.y + self.ship_img.get_height() + 10, self.ship_img.get_width() * (self.health/self.max_health), 10))
+    def healthbar(self, window):
+        pygame.draw.rect(window, (255,0,0), (self.x, self.y + self.ship_img.get_height() + 10, self.ship_img.get_width(), 10))
+        pygame.draw.rect(window, (0,255,0), (self.x, self.y + self.ship_img.get_height() + 10, self.ship_img.get_width() * (self.health/self.max_health), 10))
 
 
 class Enemy(Ship):
@@ -189,7 +191,7 @@ class Enemy(Ship):
 def collide(obj1, obj2):
     offset_x = obj2.x - obj1.x
     offset_y = obj2.y - obj1.y
-    return obj1.mask.overlap(obj2.mask, (offset_x, offset_y)) != None #################
+    return obj1.mask.overlap(obj2.mask, (int(offset_x), int(offset_y)))
 
 def main():
     run = True
@@ -264,11 +266,11 @@ def main():
                 lost = True
                 lost_count += 1
 
-        #    if lost:
-        #        if lost_count > FPS * 3:
-        #           run = False
-        #          else:
-         #       continue
+            if lost:
+                if lost_count > FPS * 3:
+                   main_menu = True
+                else:
+                   continue
 
             if len(enemies) == 0:
                 level += 1
@@ -297,19 +299,18 @@ def main():
                 enemy.move(enemy_vel)
                 enemy.move_bullet(bullet_vel, player)
 
-                if random.randrange(0, 2*60) == 1:
-                    enemy.shoot()
-
-       #        player.health -= 10
-        #        enemies.remove(enemy)
-        #        elif enemy.y + enemy.get_height() > HEIGHT+100:
-         #           lives -= 1
-          #          enemies.remove(enemy)
+            if random.randrange(0, 2*60) == 1:
+                enemy.shoot()
+                player.health -= 10
+                enemies.remove(enemy)
+            elif enemy.y + enemy.get_height() > HEIGHT+100:
+                lives -= 1
+                enemies.remove(enemy)
 
         
         
         
-
+        
         player.move_bullet(-10, enemies) # to juz nie jest main game loop
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
