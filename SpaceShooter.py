@@ -8,12 +8,12 @@ import random
 user32 = ctypes.windll.user32
 
 
-WIDTH =  user32.GetSystemMetrics(78)
-HEIGHT =  user32.GetSystemMetrics(79)
-
+WIDTH =  user32.GetSystemMetrics(0)
+HEIGHT =  user32.GetSystemMetrics(1)
+print(WIDTH,HEIGHT)
 
 pygame.display.set_caption('SpaceShooter')
-WINDOW=pygame.display.set_mode((WIDTH,HEIGHT),pygame.NOFRAME)
+WINDOW=pygame.display.set_mode((WIDTH,HEIGHT),pygame.FULLSCREEN)
 
 #enemy data
 ENEMY_SHIP=pygame.transform.scale(pygame.image.load(os.path.join("assets", "przeciwnik.png")),(100,100))
@@ -82,8 +82,8 @@ class Bullet:
     def off_screen(self, height):
         return not self.y <= height and self.y >= 0
 
-    #def collision(self, obj):
-    #    return collide(self, obj)
+#    def collision(self, obj):
+#        return collide(self, obj)
 
 
 class Ship:
@@ -115,9 +115,9 @@ class Ship:
             bullet.move(vel)
             if bullet.off_screen(HEIGHT):
                 self.bullets.remove(bullet)
-            #elif bullet.collision(obj):
-             #   obj.health -= 10
-             #   self.bullets.remove(bullet)
+    #        elif bullet.collision(obj):
+    #            obj.health -= 10
+    #            self.bullets.remove(bullet)
 
    
            
@@ -149,15 +149,22 @@ class Player(Ship):
             bullet.move(vel)
             if bullet.off_screen(HEIGHT):
                 self.bullets.remove(bullet)
-            #else:
-              #  for obj in objs:
-                #    if bullet.collision(obj):
-                #        objs.remove(obj)
-                 #       if bullet in self.bullets:
-                   #         self.bullets.remove(bullet)
-                
+         #   else:
+          #     for obj in objs:
+          #          if bullet.collision(obj):
+          #              objs.remove(obj)
+          #              if bullet in self.bullets:
+          #                  self.bullets.remove(bullet)
+          
+ #  def draw(self, window):
+ #      super().draw(window)
+ #      self.healthbar(window)
 
 
+
+#   def healthbar(self, window):
+#       pygame.draw.rect(window, (255,0,0), (self.x, self.y + self.ship_img.get_height() + 10, self.ship_img.get_width(), 10))
+#        pygame.draw.rect(window, (0,255,0), (self.x, self.y + self.ship_img.get_height() + 10, self.ship_img.get_width() * (self.health/self.max_health), 10))
 
 
 class Enemy(Ship):
@@ -208,6 +215,7 @@ def main():
     exit_button=Button(WIDTH/2+200 , HEIGHT/2+200, EXIT_BUTTON)
     res1440=Button(WIDTH/2-150 , HEIGHT/2-100, RES1440_BUTTON)
     res1920=Button(WIDTH/2-150 , HEIGHT/2+100, RES1920_BUTTON)
+
     clock = pygame.time.Clock()
     def redraw_w():
         WINDOW.blit(BACKGROUND, (0,0))
@@ -224,6 +232,7 @@ def main():
     while run:
         clock.tick(FPS)
         keys=pygame.key.get_pressed()
+
         if main_menu == True: #MAIN MENU LOOP
             if options==True:
                 WINDOW.blit(OPTIONS_BACKGROUND,(0,0))
@@ -255,11 +264,11 @@ def main():
                 lost = True
                 lost_count += 1
 
-            #if lost:
-             #   if lost_count > FPS * 3:
-            #       run = False
-            #   else:
-           #     continue
+        #    if lost:
+        #        if lost_count > FPS * 3:
+        #           run = False
+        #          else:
+         #       continue
 
             if len(enemies) == 0:
                 level += 1
@@ -291,12 +300,11 @@ def main():
                 if random.randrange(0, 2*60) == 1:
                     enemy.shoot()
 
-            #if collide(enemy, player):
-             #   player.health -= 10
-             #   enemies.remove(enemy)
-                elif enemy.y + enemy.get_height() > HEIGHT+100:
-                    lives -= 1
-                    enemies.remove(enemy)
+       #        player.health -= 10
+        #        enemies.remove(enemy)
+        #        elif enemy.y + enemy.get_height() > HEIGHT+100:
+         #           lives -= 1
+          #          enemies.remove(enemy)
 
         
         
