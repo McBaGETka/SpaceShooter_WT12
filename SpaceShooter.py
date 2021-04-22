@@ -22,6 +22,10 @@ ENEMY_BULLET=pygame.transform.scale(pygame.image.load(os.path.join("assets", "po
 
 #player data
 PLAYER_SHIP=pygame.transform.scale(pygame.image.load(os.path.join("assets", "stateczek.png")),(100,100))
+PLAYER_SHIP_WHITE=pygame.transform.scale(pygame.image.load(os.path.join("assets", "stateczek_white.png")),(100,100))
+PLAYER_SHIP_BLUE=pygame.transform.scale(pygame.image.load(os.path.join("assets", "stateczek_blue.png")),(100,100))
+PLAYER_SHIP_YELLOW=pygame.transform.scale(pygame.image.load(os.path.join("assets", "stateczek_yellow.png")),(100,100))
+
 
 PLAYER_BULLET=pygame.transform.scale(pygame.image.load(os.path.join("assets", "pocisk.png")),(10,10))
 
@@ -29,6 +33,8 @@ PLAYER_BULLET=pygame.transform.scale(pygame.image.load(os.path.join("assets", "p
 START_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "start_button.png")),(300,100))
 OPTIONS_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "options_button.png")),(300,100))
 EXIT_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "exit_button.png")),(300,100))
+ARROW_LEFT=pygame.transform.scale(pygame.image.load(os.path.join("assets", "arrow_left.png")),(100,100))
+ARROW_RIGHT=pygame.transform.scale(pygame.image.load(os.path.join("assets", "arrow.png")),(100,100))
 RESOLUTION_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "exit_button.png")),(300,100))
 RES1440_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "options_button.png")),(300,100))
 RES1920_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "options_button.png")),(300,100))
@@ -136,9 +142,16 @@ class Ship:
         return self.ship_img.get_height()
 
 class Player(Ship):
-    def __init__(self,x,y, health=100):
+    def __init__(self,x,y,ship_options, health=100):
         super().__init__(x,y)
-        self.ship_img=PLAYER_SHIP
+        if ship_options==0:
+            self.ship_img=PLAYER_SHIP
+        elif ship_options==1:
+            self.ship_img=PLAYER_SHIP_BLUE
+        elif ship_options==2:
+            self.ship_img=PLAYER_SHIP_WHITE
+        elif ship_options==3:
+            self.ship_img=PLAYER_SHIP_YELLOW
         self.bullet_img=PLAYER_BULLET
         self.mask = pygame.mask.from_surface(self.ship_img)
         self.max_health = health
@@ -182,7 +195,7 @@ class Enemy(Ship):
         self.y += vel
 
     def shoot(self):
-        if self.cooldown_counter == 0:
+        if self.cooldown_counter == 0 and random.randrange(60)==1:
             bullet = Bullet(self.x+45, self.y+100, self.bullet_img)
             self.bullets.append(bullet)
             self.cooldown_counter = 1
@@ -193,21 +206,35 @@ def collide(obj1, obj2):
     offset_y = obj2.y - obj1.y
     return obj1.mask.overlap(obj2.mask, (int(offset_x), int(offset_y)))
 
+def ship_skin_showcase(x):
+    if x==0:
+        WINDOW.blit(pygame.transform.scale(PLAYER_SHIP,(300,300)),(WIDTH/2-150,HEIGHT/2-150))
+    elif x==1:
+        WINDOW.blit(pygame.transform.scale(PLAYER_SHIP_BLUE,(300,300)),(WIDTH/2-150,HEIGHT/2-150))
+    elif x==2:
+        WINDOW.blit(pygame.transform.scale(PLAYER_SHIP_WHITE,(300,300)),(WIDTH/2-150,HEIGHT/2-150))
+    elif x==3:
+        WINDOW.blit(pygame.transform.scale(PLAYER_SHIP_YELLOW,(300,300)),(WIDTH/2-150,HEIGHT/2-150))
+    
+
 def main():
     run = True
     FPS = 60
     level = 0
-    lives = 3
-    player = Player(WIDTH/2-45,650)
+    lives = 3 
     main_menu = True 
     options=False
+    options_skins=False
+    ship_option=0
+
+    player = Player(WIDTH/2-45,650,ship_option)
 
     enemies = []
     wave_length = 5
     enemy_vel = 3
     bullet_vel = 5
 
-    player_vel=5
+    player_vel=7
 
     lost = False
     lost_count = 0
@@ -215,8 +242,10 @@ def main():
     start_button=Button(WIDTH/2-500 , HEIGHT/2+200, START_BUTTON)
     option_button=Button(WIDTH/2-150 , HEIGHT/2+200, OPTIONS_BUTTON)
     exit_button=Button(WIDTH/2+200 , HEIGHT/2+200, EXIT_BUTTON)
-    res1440=Button(WIDTH/2-150 , HEIGHT/2-100, RES1440_BUTTON)
-    res1920=Button(WIDTH/2-150 , HEIGHT/2+100, RES1920_BUTTON)
+    arrow_l=Button(WIDTH/2-400 , HEIGHT/2-50, ARROW_LEFT)
+    arrow_r=Button(WIDTH/2+300 , HEIGHT/2-50, ARROW_RIGHT)
+    opt1=Button(WIDTH/2-150 , HEIGHT/2-100, RES1440_BUTTON)
+    opt2=Button(WIDTH/2-150 , HEIGHT/2+100, RES1920_BUTTON)
 
     clock = pygame.time.Clock()
     def redraw_w():
@@ -239,13 +268,29 @@ def main():
             if options==True:
                 WINDOW.blit(OPTIONS_BACKGROUND,(0,0))
    
-                if res1440.draw():
-                    print("1440")
-                elif res1920.draw():
-                    print("1920")
-                    
+                if opt1.draw():
+                    options_skins=True
+                    options=False
+                elif opt2.draw():
+                    print("1920")    
                 if keys[pygame.K_r]:
                     options=False
+            elif options_skins ==True:
+                WINDOW.blit(OPTIONS_BACKGROUND,(0,0))
+                if arrow_l.draw() and ship_option>0:
+                    ship_option-=1
+                    print("LEFT",ship_option)
+                elif arrow_r.draw()and ship_option<3:
+                    ship_option+=1
+                    print("RIGTH",ship_option)
+                elif keys[pygame.K_r]:
+                    options_skins=False
+                    options=True
+                ship_skin_showcase(ship_option)
+                player = Player(WIDTH/2-45,650,ship_option)
+
+                
+
 
             else:
                 WINDOW.blit(STARTING_BACKGROUND,(0,0))
@@ -300,7 +345,7 @@ def main():
                 enemy.move(enemy_vel)
                 enemy.move_bullet(bullet_vel, player)
 
-            #if random.randrange(0, 2*60) == 1:
+            #if random.randrange(0,2*60) == 1:
                 #enemy.shoot()
                 #player.health -= 10
                 #enemies.remove(enemy)
