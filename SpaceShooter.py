@@ -244,8 +244,10 @@ def main():
     option_button=Button(WIDTH/2+25 , HEIGHT/2+200, OPTIONS_BUTTON)
     records_button=Button(WIDTH/2-315 , HEIGHT/2+300, RECORDS_BUTTON)
     exit_button=Button(WIDTH/2+25 , HEIGHT/2+300, EXIT_BUTTON)
-    res1440=Button(WIDTH/2-150 , HEIGHT/2-100, RES1440_BUTTON)
-    res1920=Button(WIDTH/2-150 , HEIGHT/2+100, RES1920_BUTTON)
+    arrow_l=Button(WIDTH/2-400 , HEIGHT/2-50, ARROW_LEFT)
+    arrow_r=Button(WIDTH/2+300 , HEIGHT/2-50, ARROW_RIGHT)
+    opt1=Button(WIDTH/2-150 , HEIGHT/2-100, RES1440_BUTTON)
+    opt2=Button(WIDTH/2-150 , HEIGHT/2+100, RES1920_BUTTON)
 
     clock = pygame.time.Clock()
     def redraw_w():
