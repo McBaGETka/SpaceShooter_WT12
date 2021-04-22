@@ -28,6 +28,7 @@ PLAYER_BULLET=pygame.transform.scale(pygame.image.load(os.path.join("assets", "p
 #buttons
 START_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "start_button.png")),(300,100))
 OPTIONS_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "options_button.png")),(300,100))
+RECORDS_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "records_button.png")),(300,100))
 EXIT_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "exit_button.png")),(300,100))
 RESOLUTION_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "exit_button.png")),(300,100))
 RES1440_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "options_button.png")),(300,100))
@@ -212,9 +213,10 @@ def main():
     lost = False
     lost_count = 0
 
-    start_button=Button(WIDTH/2-500 , HEIGHT/2+200, START_BUTTON)
-    option_button=Button(WIDTH/2-150 , HEIGHT/2+200, OPTIONS_BUTTON)
-    exit_button=Button(WIDTH/2+200 , HEIGHT/2+200, EXIT_BUTTON)
+    start_button=Button(WIDTH/2-315 , HEIGHT/2+200, START_BUTTON)
+    option_button=Button(WIDTH/2+25 , HEIGHT/2+200, OPTIONS_BUTTON)
+    records_button=Button(WIDTH/2-315 , HEIGHT/2+300, RECORDS_BUTTON)
+    exit_button=Button(WIDTH/2+25 , HEIGHT/2+300, EXIT_BUTTON)
     res1440=Button(WIDTH/2-150 , HEIGHT/2-100, RES1440_BUTTON)
     res1920=Button(WIDTH/2-150 , HEIGHT/2+100, RES1920_BUTTON)
 
@@ -253,6 +255,8 @@ def main():
                     main_menu=False
                 elif option_button.draw():
                     options=True
+                elif records_button.draw():
+                    records=True
                 elif exit_button.draw():
                     run = False
             
