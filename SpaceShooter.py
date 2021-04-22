@@ -296,15 +296,16 @@ def main():
                 main_menu=True
 
             for enemy in enemies[:]:
+                enemy.shoot()
                 enemy.move(enemy_vel)
                 enemy.move_bullet(bullet_vel, player)
 
-            if random.randrange(0, 2*60) == 1:
-                enemy.shoot()
+            #if random.randrange(0, 2*60) == 1:
+                #enemy.shoot()
+                #player.health -= 10
+                #enemies.remove(enemy)
+            if enemy.y + enemy.get_height() > HEIGHT:
                 player.health -= 10
-                enemies.remove(enemy)
-            elif enemy.y + enemy.get_height() > HEIGHT+100:
-                lives -= 1
                 enemies.remove(enemy)
 
         
