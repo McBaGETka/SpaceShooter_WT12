@@ -34,11 +34,10 @@ START_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "st
 OPTIONS_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "options_button.png")),(300,100))
 RECORDS_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "records_button.png")),(300,100))
 EXIT_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "exit_button.png")),(300,100))
-ARROW_LEFT=pygame.transform.scale(pygame.image.load(os.path.join("assets", "arrow_left.png")),(100,100))
-ARROW_RIGHT=pygame.transform.scale(pygame.image.load(os.path.join("assets", "arrow.png")),(100,100))
-RESOLUTION_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "exit_button.png")),(300,100))
-RES1440_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "options_button.png")),(300,100))
-RES1920_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "options_button.png")),(300,100))
+ARROW_LEFT=pygame.transform.scale(pygame.image.load(os.path.join("assets", "arrow_left.png")),(150,100))
+ARROW_RIGHT=pygame.transform.scale(pygame.image.load(os.path.join("assets", "arrow_right.png")),(150,100))
+SKIN_CHANGE_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "options_button.png")),(300,100))
+
 
 
 #background
@@ -211,11 +210,11 @@ def ship_skin_showcase(x):
     if x==0:
         WINDOW.blit(pygame.transform.scale(PLAYER_SHIP,(300,300)),(WIDTH/2-150,HEIGHT/2-150))
     elif x==1:
-        WINDOW.blit(pygame.transform.scale(PLAYER_SHIP_BLUE,(300,300)),(WIDTH/2-150,HEIGHT/2-150))
+        WINDOW.blit(pygame.transform.scale(PLAYER_SHIP_BLUE,(300,300)),(WIDTH/2-155,HEIGHT/2-150))
     elif x==2:
-        WINDOW.blit(pygame.transform.scale(PLAYER_SHIP_WHITE,(300,300)),(WIDTH/2-150,HEIGHT/2-150))
+        WINDOW.blit(pygame.transform.scale(PLAYER_SHIP_WHITE,(300,300)),(WIDTH/2-155,HEIGHT/2-150))
     elif x==3:
-        WINDOW.blit(pygame.transform.scale(PLAYER_SHIP_YELLOW,(300,300)),(WIDTH/2-150,HEIGHT/2-150))
+        WINDOW.blit(pygame.transform.scale(PLAYER_SHIP_YELLOW,(300,300)),(WIDTH/2-155,HEIGHT/2-150))
     
 
 def main():
@@ -244,10 +243,10 @@ def main():
     option_button=Button(WIDTH/2+25 , HEIGHT/2+200, OPTIONS_BUTTON)
     records_button=Button(WIDTH/2-315 , HEIGHT/2+300, RECORDS_BUTTON)
     exit_button=Button(WIDTH/2+25 , HEIGHT/2+300, EXIT_BUTTON)
-    arrow_l=Button(WIDTH/2-400 , HEIGHT/2-50, ARROW_LEFT)
-    arrow_r=Button(WIDTH/2+300 , HEIGHT/2-50, ARROW_RIGHT)
-    opt1=Button(WIDTH/2-150 , HEIGHT/2-100, RES1440_BUTTON)
-    opt2=Button(WIDTH/2-150 , HEIGHT/2+100, RES1920_BUTTON)
+    arrow_l=Button(WIDTH/2-425 , HEIGHT/2-50, ARROW_LEFT)
+    arrow_r=Button(WIDTH/2+275 , HEIGHT/2-50, ARROW_RIGHT)
+    opt1=Button(WIDTH/2-150 , HEIGHT/2-400, SKIN_CHANGE_BUTTON)
+    opt2=Button(WIDTH/2-150 , HEIGHT/2-200, OPTIONS_BUTTON)
 
     clock = pygame.time.Clock()
     def redraw_w():
