@@ -3,7 +3,7 @@ import os
 import time
 import ctypes
 import random
-
+pygame.font.init()
 
 user32 = ctypes.windll.user32
 
@@ -36,7 +36,8 @@ RECORDS_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "
 EXIT_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "exit_button.png")),(300,100))
 ARROW_LEFT=pygame.transform.scale(pygame.image.load(os.path.join("assets", "arrow_left.png")),(150,100))
 ARROW_RIGHT=pygame.transform.scale(pygame.image.load(os.path.join("assets", "arrow_right.png")),(150,100))
-SKIN_CHANGE_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "options_button.png")),(300,100))
+SKIN_CHANGE_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "skin_change_button.png")),(900,300))
+BACK_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "back_button.png")),(200,200))
 
 
 
@@ -155,6 +156,7 @@ class Player(Ship):
         self.bullet_img=PLAYER_BULLET
         self.mask = pygame.mask.from_surface(self.ship_img)
         self.max_health = health
+        self.points=0
 
     def move_bullet(self, vel, objs):
         self.cooldown()
@@ -165,12 +167,19 @@ class Player(Ship):
             else:
                 for obj in objs:
                     if bullet.collision(obj):
+                        self.points+=obj.return_value()
                         objs.remove(obj)
+                        
                         if bullet in self.bullets:
                             self.bullets.remove(bullet)
 
-                 
-          
+    def border_pass(self):
+        self.points-=50
+
+
+    def get_points(self):
+        return self.points
+
     def draw(self, window):
         super().draw(window)
         self.healthbar(window)
@@ -178,8 +187,8 @@ class Player(Ship):
 
 
     def healthbar(self, window):
-        pygame.draw.rect(window, (255,0,0), (self.x, self.y + self.ship_img.get_height() + 10, self.ship_img.get_width(), 10))
-        pygame.draw.rect(window, (0,255,0), (self.x, self.y + self.ship_img.get_height() + 10, self.ship_img.get_width() * (self.health/self.max_health), 10))
+        pygame.draw.rect(window, (255,0,0), (100, 100 + 10, 300, 50))
+        pygame.draw.rect(window, (0,255,0), (100, 100 + 10, 300* (self.health/self.max_health), 50))
 
 
 class Enemy(Ship):
@@ -190,6 +199,7 @@ class Enemy(Ship):
         super().__init__(x, y, health)
         self.ship_img, self.bullet_img = self.TYPE_MAP[type]
         self.mask = pygame.mask.from_surface(self.ship_img)
+        self.value=100
 
     def move(self, vel):
         self.y += vel
@@ -199,6 +209,9 @@ class Enemy(Ship):
             bullet = Bullet(self.x+45, self.y+100, self.bullet_img)
             self.bullets.append(bullet)
             self.cooldown_counter = 1
+    
+    def return_value(self):
+        return self.value
 
 
 def collide(obj1, obj2):
@@ -215,7 +228,7 @@ def ship_skin_showcase(x):
         WINDOW.blit(pygame.transform.scale(PLAYER_SHIP_WHITE,(300,300)),(WIDTH/2-155,HEIGHT/2-150))
     elif x==3:
         WINDOW.blit(pygame.transform.scale(PLAYER_SHIP_YELLOW,(300,300)),(WIDTH/2-155,HEIGHT/2-150))
-    
+
 
 def main():
     run = True
@@ -226,11 +239,14 @@ def main():
     options=False
     options_skins=False
     ship_option=0
+    points=0
+    main_font = pygame.font.SysFont("comicsans", 50)
+
 
     player = Player(WIDTH/2-45,650,ship_option)
 
     enemies = []
-    wave_length = 5
+    wave_length = 1
     enemy_vel = 3
     bullet_vel = 5
 
@@ -245,15 +261,25 @@ def main():
     exit_button=Button(WIDTH/2+25 , HEIGHT/2+300, EXIT_BUTTON)
     arrow_l=Button(WIDTH/2-425 , HEIGHT/2-50, ARROW_LEFT)
     arrow_r=Button(WIDTH/2+275 , HEIGHT/2-50, ARROW_RIGHT)
-    opt1=Button(WIDTH/2-150 , HEIGHT/2-400, SKIN_CHANGE_BUTTON)
-    opt2=Button(WIDTH/2-150 , HEIGHT/2-200, OPTIONS_BUTTON)
+    opt1=Button(WIDTH/2-450 , HEIGHT/2-400, SKIN_CHANGE_BUTTON)
+    opt2=Button(WIDTH/2-150 , HEIGHT/2, OPTIONS_BUTTON)
+    back_button=Button(0,0, BACK_BUTTON)
 
     clock = pygame.time.Clock()
     def redraw_w():
         WINDOW.blit(BACKGROUND, (0,0))
 
+        score_label = main_font.render(f"Score: {player.get_points()}", 1, (180,0,255))
+        level_label = main_font.render(f"Level: {level}", 1, (0,200,255))
+
+        WINDOW.blit(score_label, (50,400))
+        WINDOW.blit(level_label, (50,600))
+
         for enemy in enemies:
             enemy.draw(WINDOW)
+        
+
+        
 
         player.draw(WINDOW)
         pygame.display.update()
@@ -264,7 +290,7 @@ def main():
     while run:
         clock.tick(FPS)
         keys=pygame.key.get_pressed()
-
+        
         if main_menu == True: #MAIN MENU LOOP
             if options==True:
                 WINDOW.blit(OPTIONS_BACKGROUND,(0,0))
@@ -272,21 +298,20 @@ def main():
                 if opt1.draw():
                     options_skins=True
                     options=False
-                elif opt2.draw():
-                    print("1920")    
-                if keys[pygame.K_r]:
+                if opt2.draw():
+                    print("cos")            
+                if back_button.draw():
                     options=False
             elif options_skins ==True:
                 WINDOW.blit(OPTIONS_BACKGROUND,(0,0))
-                if arrow_l.draw() and ship_option>0:
-                    ship_option-=1
-                    print("LEFT",ship_option)
-                elif arrow_r.draw()and ship_option<3:
-                    ship_option+=1
-                    print("RIGTH",ship_option)
-                elif keys[pygame.K_r]:
+                if back_button.draw():
                     options_skins=False
                     options=True
+                if arrow_l.draw() and ship_option>0:
+                    ship_option-=1
+                if arrow_r.draw()and ship_option<3:
+                    ship_option+=1                   
+                
                 ship_skin_showcase(ship_option)
                 player = Player(WIDTH/2-45,650,ship_option)
 
@@ -297,11 +322,11 @@ def main():
                 WINDOW.blit(STARTING_BACKGROUND,(0,0))
                 if start_button.draw():
                     main_menu=False
-                elif option_button.draw():
+                if option_button.draw():
                     options=True
-                elif records_button.draw():
+                if records_button.draw():
                     records=True
-                elif exit_button.draw():
+                if exit_button.draw():
                     run = False
             
 
@@ -322,15 +347,15 @@ def main():
 
             if len(enemies) == 0:
                 level += 1
-                wave_length += 5
+                wave_length += 2
                 for i in range(wave_length):
-                    enemy = Enemy(random.randrange(50, WIDTH-100), random.randrange(-1500, -100), random.choice(["przeciwnik"]))
+                    enemy = Enemy(random.randrange(500, WIDTH-500), random.randrange(-1500, -100), random.choice(["przeciwnik"]))
                     enemies.append(enemy)
   
 
-            if keys[pygame.K_a] and player.x - player_vel > 0:
+            if keys[pygame.K_a] and player.x - player_vel > 450:
                 player.x -= player_vel
-            if keys[pygame.K_d] and player.x + player_vel + player.get_width() < WIDTH:
+            if keys[pygame.K_d] and player.x + player_vel + player.get_width() < WIDTH-400:
                 player.x += player_vel
             if keys[pygame.K_w] and player.y - player_vel > 0:
                 player.y -= player_vel
@@ -354,6 +379,7 @@ def main():
                 #enemies.remove(enemy)
             if enemy.y + enemy.get_height() > HEIGHT:
                 player.health -= 10
+                player.border_pass()
                 enemies.remove(enemy)
 
         
