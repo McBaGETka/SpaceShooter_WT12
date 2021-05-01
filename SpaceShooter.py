@@ -46,6 +46,11 @@ STARTING_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("asset
 OPTIONS_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "options.png")),(WIDTH,HEIGHT))
 BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "kosmos.png")),(WIDTH,HEIGHT))
 
+
+#graphics
+VICTORY=pygame.transform.scale(pygame.image.load(os.path.join("assets", "victory.png")),(1200,400))
+GAME_OVER=pygame.transform.scale(pygame.image.load(os.path.join("assets", "game_over.png")),(600,200))
+
 class Button():
 	def __init__(self, x, y, image):
 		self.image = image
@@ -229,7 +234,6 @@ def ship_skin_showcase(x):
     elif x==3:
         WINDOW.blit(pygame.transform.scale(PLAYER_SHIP_YELLOW,(300,300)),(WIDTH/2-155,HEIGHT/2-150))
 
-
 def main():
     run = True
     FPS = 60
@@ -238,8 +242,9 @@ def main():
     main_menu = True 
     options=False
     options_skins=False
+    ending_screen=False
+    victory=False
     ship_option=0
-    points=0
     main_font = pygame.font.SysFont("comicsans", 50)
 
 
@@ -284,13 +289,14 @@ def main():
         player.draw(WINDOW)
         pygame.display.update()
 
-    
+ 
+
+
 
 
     while run:
         clock.tick(FPS)
         keys=pygame.key.get_pressed()
-        
         if main_menu == True: #MAIN MENU LOOP
             if options==True:
                 WINDOW.blit(OPTIONS_BACKGROUND,(0,0))
@@ -332,7 +338,34 @@ def main():
 
             pygame.display.update()
             
-             
+        elif ending_screen==True:
+            WINDOW.blit(OPTIONS_BACKGROUND,(0,0))
+           
+            if lost==True:
+                WINDOW.blit(GAME_OVER,(WIDTH/2-300,300))
+            else:
+                WINDOW.blit(VICTORY,(WIDTH/2-600,300))
+
+            score_label = main_font.render(f"Score: {player.get_points()}", 1, (180,0,255))
+            WINDOW.blit(score_label, (WIDTH/2-100,700))
+            pygame.display.update()
+            if keys[pygame.K_e]:
+                run=False
+            if keys[pygame.K_r]:
+                player = Player(WIDTH/2-45,650,ship_option)
+                player.health=100
+                enemies = []
+                main_menu=True
+                lost=False
+                level=0
+                lives=3
+                lost_count=0
+                player.points=0
+                wave_length=1
+                ending_screen=False
+                
+            
+
         else: 
             redraw_w()
             if lives <= 0 or player.health <= 0:
@@ -341,13 +374,14 @@ def main():
 
             if lost:
                 if lost_count > FPS * 3:
-                   main_menu = True
+                   ending_screen = True
                 else:
                    continue
-
+            if level==3:
+                ending_screen=True
             if len(enemies) == 0:
                 level += 1
-                wave_length += 2
+                wave_length += 1
                 for i in range(wave_length):
                     enemy = Enemy(random.randrange(500, WIDTH-500), random.randrange(-1500, -100), random.choice(["przeciwnik"]))
                     enemies.append(enemy)
