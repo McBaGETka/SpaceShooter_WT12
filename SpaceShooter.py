@@ -321,9 +321,6 @@ def main():
                 ship_skin_showcase(ship_option)
                 player = Player(WIDTH/2-45,650,ship_option)
 
-                
-
-
             else:
                 WINDOW.blit(STARTING_BACKGROUND,(0,0))
                 if start_button.draw():
@@ -377,7 +374,7 @@ def main():
                    ending_screen = True
                 else:
                    continue
-            if level==3:
+            if level==4:
                 ending_screen=True
             if len(enemies) == 0:
                 level += 1
@@ -389,7 +386,7 @@ def main():
 
             if keys[pygame.K_a] and player.x - player_vel > 450:
                 player.x -= player_vel
-            if keys[pygame.K_d] and player.x + player_vel + player.get_width() < WIDTH-400:
+            if keys[pygame.K_d] and player.x + player_vel + player.get_width() < WIDTH-450:
                 player.x += player_vel
             if keys[pygame.K_w] and player.y - player_vel > 0:
                 player.y -= player_vel
