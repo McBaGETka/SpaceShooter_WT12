@@ -180,6 +180,7 @@ class Player(Ship):
 
     def border_pass(self):
         self.points-=50
+        
 
 
     def get_points(self):
@@ -197,12 +198,10 @@ class Player(Ship):
 
 
 class Enemy(Ship):
-    TYPE_MAP = {
-               "przeciwnik": (ENEMY_SHIP, ENEMY_BULLET), 
-               }
-    def __init__(self, x, y, type, health=100):
+    def __init__(self, x, y, health=100):
         super().__init__(x, y, health)
-        self.ship_img, self.bullet_img = self.TYPE_MAP[type]
+        self.ship_img=ENEMY_SHIP
+        self.bullet_img =ENEMY_BULLET
         self.mask = pygame.mask.from_surface(self.ship_img)
         self.value=100
 
@@ -215,6 +214,38 @@ class Enemy(Ship):
             self.bullets.append(bullet)
             self.cooldown_counter = 1
     
+    def return_value(self):
+        return self.value
+    
+class Enemy_Charge(Ship):
+    def __init__(self, x, y, health=100):
+        super().__init__(x, y, health)
+        self.ship_img=ENEMY_SHIP
+        self.mask = pygame.mask.from_surface(self.ship_img)
+        self.value=150
+        self.idle = True
+        self.direction = random.randrange(1,11)
+
+    def move(self, vel,obj):
+        if obj.x<self.x<obj.x+10:
+            self.idle=False
+
+        if self.idle==False:
+            self.y+=vel*3
+
+        else:
+            if self.x<450:
+                self.direction=6
+            elif self.x>WIDTH-550:
+                self.direction=1
+
+            if self.direction>5:
+                self.x+=vel
+            else:
+                self.x-=vel
+
+    
+  
     def return_value(self):
         return self.value
 
@@ -234,6 +265,9 @@ def ship_skin_showcase(x):
     elif x==3:
         WINDOW.blit(pygame.transform.scale(PLAYER_SHIP_YELLOW,(300,300)),(WIDTH/2-155,HEIGHT/2-150))
 
+
+
+
 def main():
     run = True
     FPS = 60
@@ -251,6 +285,7 @@ def main():
     player = Player(WIDTH/2-45,650,ship_option)
 
     enemies = []
+    enemies_charge = []
     wave_length = 1
     enemy_vel = 3
     bullet_vel = 5
@@ -282,6 +317,9 @@ def main():
 
         for enemy in enemies:
             enemy.draw(WINDOW)
+
+        for enemy_charge in enemies_charge:
+            enemy_charge.draw(WINDOW)
         
 
         
@@ -289,7 +327,9 @@ def main():
         player.draw(WINDOW)
         pygame.display.update()
 
- 
+    def off():
+        player.health -= 5
+        player.border_pass()
 
 
 
@@ -376,12 +416,15 @@ def main():
                    continue
             if level==4:
                 ending_screen=True
-            if len(enemies) == 0:
+            if len(enemies)+len(enemies_charge) == 0:
                 level += 1
                 wave_length += 1
                 for i in range(wave_length):
-                    enemy = Enemy(random.randrange(500, WIDTH-500), random.randrange(-1500, -100), random.choice(["przeciwnik"]))
+                    enemy = Enemy(random.randrange(550, WIDTH-550), random.randrange(-1500, -100))
+                    enemy_charge = Enemy_Charge(random.randrange(500, WIDTH-500), random.randrange(-10,50))
                     enemies.append(enemy)
+                    enemies_charge.append(enemy_charge)
+                    
   
 
             if keys[pygame.K_a] and player.x - player_vel > 450:
@@ -403,21 +446,25 @@ def main():
                 enemy.shoot()
                 enemy.move(enemy_vel)
                 enemy.move_bullet(bullet_vel, player)
+                if enemy.y + enemy.get_height() > HEIGHT:
+                    enemies.remove(enemy)
+                    off()
 
-            #if random.randrange(0,2*60) == 1:
-                #enemy.shoot()
-                #player.health -= 10
-                #enemies.remove(enemy)
-            if enemy.y + enemy.get_height() > HEIGHT:
-                player.health -= 10
-                player.border_pass()
-                enemies.remove(enemy)
 
+
+            for enemy_charge in enemies_charge[:]:
+                enemy_charge.move(enemy_vel,player)
+                if enemy_charge.y + enemy_charge.get_height() > HEIGHT:
+                    enemies_charge.remove(enemy_charge)
+                    off()
+
+                
         
         
         
         
-        player.move_bullet(-10, enemies) # to juz nie jest main game loop
+        player.move_bullet(-10, enemies)
+        player.move_bullet(0, enemies_charge)# to juz nie jest main game loop
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run=False
