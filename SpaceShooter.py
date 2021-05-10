@@ -46,6 +46,7 @@ STARTING_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("asset
 OPTIONS_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "options.png")).convert(),(WIDTH,HEIGHT))
 BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "kosmos2.png")).convert(),(WIDTH,HEIGHT))
 OVERLAY=pygame.transform.scale(pygame.image.load(os.path.join("assets", "overlay.png")).convert_alpha(),(WIDTH,HEIGHT))
+HP_BORDER=pygame.transform.scale(pygame.image.load(os.path.join("assets", "hp_border.png")).convert_alpha(),(300,50))
 
 
 #graphics
@@ -193,8 +194,8 @@ class Player(Ship):
 
 
     def healthbar(self, window):
-        pygame.draw.rect(window, (255,0,0), (100, 100 + 10, 300, 50))
-        pygame.draw.rect(window, (0,255,0), (100, 100 + 10, 300* (self.health/self.max_health), 50))
+        pygame.draw.rect(window, (255,0,0), (100, 200, 300, 50))
+        pygame.draw.rect(window, (0,255,0), (100, 200, 300* (self.health/self.max_health), 50))
 
 
 class Enemy(Ship):
@@ -228,9 +229,9 @@ class Enemy_Charge(Ship):
         self.direction = random.randrange(1,11)
         
         if self.x>WIDTH/2:
-            self.x=random.randrange(0,400)
+            self.x=random.randrange(0,450)
         else:
-            self.x=random.randrange(WIDTH-400,WIDTH)
+            self.x=random.randrange(WIDTH-450,WIDTH)
 
     def move(self, vel,obj):
         if obj.x<self.x<obj.x+10:
@@ -284,7 +285,8 @@ def main():
     ending_screen=False
     victory=False
     ship_option=0
-    main_font = pygame.font.SysFont("comicsans", 50)
+
+    main_font = pygame.font.SysFont("agency_fb", 50)
 
     spawn_rate=[[2,3,0,6,7],[1,3,7,3,5]]
     player = Player(WIDTH/2-45,650,ship_option)
@@ -326,10 +328,13 @@ def main():
         WINDOW.blit(OVERLAY, (0,0))
 
         WINDOW.blit(score_label, (WIDTH-325,250))
-        WINDOW.blit(level_label, (100,200))
+        WINDOW.blit(level_label, (100,350))
+
+
         
 
         player.draw(WINDOW)
+        WINDOW.blit(HP_BORDER,(100,200))
         pygame.display.update()
 
     def off():
@@ -414,7 +419,7 @@ def main():
                 lost = True
                 lost_count += 1
                 ending_screen = True
-            if level==10:
+            if level==5:
                 ending_screen=True
             if len(enemies)+len(enemies_charge) == 0:
                 level += 1
