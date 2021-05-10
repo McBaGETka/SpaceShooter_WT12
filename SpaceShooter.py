@@ -98,6 +98,26 @@ class Bullet:
     def collision(self, obj):
         return collide(self, obj)
 
+class Bullet_SRS(Bullet): #full name Bullet Spread Right Short
+    def move(self, vel):
+        self.y += vel
+        self.x += vel*0.05
+
+class Bullet_SLS(Bullet): #full name Bullet Spread Left Short
+    def move(self, vel):
+        self.y += vel
+        self.x -= vel*0.05
+
+class Bullet_SRL(Bullet): #full name Bullet Spread Right Long
+    def move(self, vel):
+        self.y += vel
+        self.x += vel*0.5
+
+class Bullet_SLL(Bullet): #full name Bullet Spread Left Long
+    def move(self, vel):
+        self.y += vel
+        self.x -= vel*0.5
+
 
 class Ship:
 
@@ -254,6 +274,38 @@ class Enemy_Charge(Ship):
     def return_value(self):
         return self.value
 
+class Enemy_Spread(Ship):
+
+    COOLDOWN = 160
+
+    def __init__(self, x, y, health=100):
+        super().__init__(x, y, health)
+        self.ship_img=ENEMY_SHIP
+        self.bullet_img =ENEMY_BULLET
+        self.mask = pygame.mask.from_surface(self.ship_img)
+        self.value=100
+
+    def move(self, vel):
+        self.y += vel
+
+    def shoot(self):
+        if self.cooldown_counter == 0 and random.randrange(120)==1:
+            bullet = Bullet(self.x+45, self.y+100, self.bullet_img)
+            bulletsrs = Bullet_SRS(self.x+45, self.y+100, self.bullet_img)
+            bulletsls = Bullet_SLS(self.x+45, self.y+100, self.bullet_img)
+            bulletsrl = Bullet_SRL(self.x+45, self.y+100, self.bullet_img)
+            bulletsll = Bullet_SLL(self.x+45, self.y+100, self.bullet_img)
+            self.bullets.append(bullet)
+            self.bullets.append(bulletsrs)
+            self.bullets.append(bulletsls)
+            self.bullets.append(bulletsrl)
+            self.bullets.append(bulletsll)
+            self.cooldown_counter = 1
+
+    
+    def return_value(self):
+        return self.value
+
 
 def collide(obj1, obj2):
     offset_x = obj2.x - obj1.x
@@ -286,11 +338,12 @@ def main():
     ship_option=0
     main_font = pygame.font.SysFont("comicsans", 50)
 
-    spawn_rate=[[2,3,0,6,7],[1,3,7,3,5]]
+    spawn_rate=[[2,3,0,6,7],[1,3,7,3,5],[0,0,1,2,3]]
     player = Player(WIDTH/2-45,650,ship_option)
 
     enemies = []
     enemies_charge = []
+
     wave_length = 1
     enemy_vel = 3
     bullet_vel = 5
@@ -397,13 +450,13 @@ def main():
                 player = Player(WIDTH/2-45,650,ship_option)
                 player.health=100
                 enemies = []
+                enemies_charge = []
                 main_menu=True
                 lost=False
                 level=0
                 lives=3
                 lost_count=0
                 player.points=0
-                wave_length=1
                 ending_screen=False
                 
             
@@ -414,7 +467,7 @@ def main():
                 lost = True
                 lost_count += 1
                 ending_screen = True
-            if level==10:
+            if level==5:
                 ending_screen=True
             if len(enemies)+len(enemies_charge) == 0:
                 level += 1
@@ -422,9 +475,11 @@ def main():
                     enemy = Enemy(random.randrange(600, WIDTH-600), random.randrange(-1500, -100))
                     enemies.append(enemy)
                 for x in range(spawn_rate[1][level-1]):
-                    enemy_charge = Enemy_Charge(random.randrange(500, WIDTH-500), random.randrange(-10,100))
+                    enemy_charge = Enemy_Charge(random.randrange(500, WIDTH-500), random.randrange(-20,200))
                     enemies_charge.append(enemy_charge)
-                    
+                for i in range(spawn_rate[2][level-1]):
+                    enemy = Enemy_Spread(random.randrange(600, WIDTH-600), random.randrange(-1500, -100))
+                    enemies.append(enemy)
   
 
             if keys[pygame.K_a] and player.x - player_vel > 520:
