@@ -286,7 +286,7 @@ def main():
     ship_option=0
     main_font = pygame.font.SysFont("comicsans", 50)
 
-
+    spawn_rate=[[2,3,0,6,7],[1,3,7,3,5]]
     player = Player(WIDTH/2-45,650,ship_option)
 
     enemies = []
@@ -325,7 +325,7 @@ def main():
         level_label = main_font.render(f"Level: {level}", 1, (0,200,255))
         WINDOW.blit(OVERLAY, (0,0))
 
-        WINDOW.blit(score_label, (WIDTH-300,200))
+        WINDOW.blit(score_label, (WIDTH-325,250))
         WINDOW.blit(level_label, (100,200))
         
 
@@ -413,28 +413,23 @@ def main():
             if lives <= 0 or player.health <= 0:
                 lost = True
                 lost_count += 1
-
-            if lost:
-                if lost_count > FPS * 3:
-                   ending_screen = True
-                else:
-                   continue
-            if level==4:
+                ending_screen = True
+            if level==10:
                 ending_screen=True
             if len(enemies)+len(enemies_charge) == 0:
                 level += 1
-                wave_length += 1
-                for i in range(wave_length):
-                    enemy = Enemy(random.randrange(550, WIDTH-550), random.randrange(-1500, -100))
-                    enemy_charge = Enemy_Charge(random.randrange(500, WIDTH-500), random.randrange(-10,100))
+                for i in range(spawn_rate[0][level-1]):
+                    enemy = Enemy(random.randrange(600, WIDTH-600), random.randrange(-1500, -100))
                     enemies.append(enemy)
+                for x in range(spawn_rate[1][level-1]):
+                    enemy_charge = Enemy_Charge(random.randrange(500, WIDTH-500), random.randrange(-10,100))
                     enemies_charge.append(enemy_charge)
                     
   
 
-            if keys[pygame.K_a] and player.x - player_vel > 450:
+            if keys[pygame.K_a] and player.x - player_vel > 520:
                 player.x -= player_vel
-            if keys[pygame.K_d] and player.x + player_vel + player.get_width() < WIDTH-450:
+            if keys[pygame.K_d] and player.x + player_vel + player.get_width() < WIDTH-520:
                 player.x += player_vel
             if keys[pygame.K_w] and player.y - player_vel > 0:
                 player.y -= player_vel
