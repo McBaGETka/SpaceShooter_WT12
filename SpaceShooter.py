@@ -17,8 +17,13 @@ WINDOW=pygame.display.set_mode((WIDTH,HEIGHT),pygame.FULLSCREEN)
 
 #enemy data
 ENEMY_SHIP=pygame.transform.scale(pygame.image.load(os.path.join("assets", "przeciwnik.png")).convert_alpha(),(75,75))
+ENEMY_SHIP_CHARGE=pygame.transform.scale(pygame.image.load(os.path.join("assets", "enemy_charge.png")).convert_alpha(),(75,75))
+ENEMY_SHIP_CHARGE_ANGRY=pygame.transform.scale(pygame.image.load(os.path.join("assets", "enemy_charge_angry.png")).convert_alpha(),(75,75))
+ENEMY_SHIP_SHOTGUN=pygame.transform.scale(pygame.image.load(os.path.join("assets", "enemy_shotgun.png")).convert_alpha(),(75,40))
 
 ENEMY_BULLET=pygame.transform.scale(pygame.image.load(os.path.join("assets", "pocisk.png")).convert_alpha(),(8,8))
+ENEMY_BULLET_2=pygame.transform.scale(pygame.image.load(os.path.join("assets", "pocisk.png")).convert_alpha(),(10,2))
+
 
 #player data
 PLAYER_SHIP=pygame.transform.scale(pygame.image.load(os.path.join("assets", "stateczek.png")).convert_alpha(),(75,75))
@@ -122,7 +127,7 @@ class Bullet_SLL(Bullet): #full name Bullet Spread Left Long
 
 class Ship:
 
-    COOLDOWN = 30
+    COOLDOWN = 50
     def __init__(self,x,y, health=100):
         self.x=x
         self.y=y
@@ -241,7 +246,7 @@ class Enemy(Ship):
 class Enemy_Charge(Ship):
     def __init__(self, x, y, health=100):
         super().__init__(x, y, health)
-        self.ship_img=ENEMY_SHIP
+        self.ship_img=ENEMY_SHIP_CHARGE
         self.mask = pygame.mask.from_surface(self.ship_img)
         self.value=150
         self.idle = True
@@ -256,11 +261,13 @@ class Enemy_Charge(Ship):
     def move(self, vel,obj):
         if obj.x<self.x<obj.x+10:
             self.idle=False
+            self.ship_img=ENEMY_SHIP_CHARGE_ANGRY
 
         if self.idle==False:
-            self.y+=vel*4
+            self.y+=vel*5
             if  not obj.x-150<self.x<obj.x+150:
                 self.idle=True
+                self.ship_img=ENEMY_SHIP_CHARGE
         else:
             if self.x<450:
                 self.direction=6
@@ -281,8 +288,8 @@ class Enemy_Spread(Ship):
 
     def __init__(self, x, y, health=100):
         super().__init__(x, y, health)
-        self.ship_img=ENEMY_SHIP
-        self.bullet_img =ENEMY_BULLET
+        self.ship_img=ENEMY_SHIP_SHOTGUN
+        self.bullet_img =ENEMY_BULLET_2
         self.mask = pygame.mask.from_surface(self.ship_img)
         self.value=100
 
@@ -340,7 +347,7 @@ def main():
 
     main_font = pygame.font.SysFont("agency_fb", 50)
 
-    spawn_rate=[[2,3,0,6,7],[1,3,7,3,5],[0,0,1,2,3]]
+    spawn_rate=[[2,3,0,0,7],[1,3,7,0,5],[1,1,1,7,3]]
     player = Player(WIDTH/2-45,650,ship_option)
 
     enemies = []
