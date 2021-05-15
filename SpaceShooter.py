@@ -42,8 +42,8 @@ START_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "st
 OPTIONS_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "options_button.png")).convert_alpha(),(300,100))
 RECORDS_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "records_button.png")).convert_alpha(),(300,100))
 EXIT_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "exit_button.png")).convert_alpha(),(300,100))
-ARROW_LEFT=pygame.transform.scale(pygame.image.load(os.path.join("assets", "arrow_left.png")).convert(),(150,100))
-ARROW_RIGHT=pygame.transform.scale(pygame.image.load(os.path.join("assets", "arrow_right.png")).convert(),(150,100))
+ARROW_LEFT=pygame.transform.scale(pygame.image.load(os.path.join("assets", "arrow_left.png")).convert_alpha(),(200,200))
+ARROW_RIGHT=pygame.transform.scale(pygame.image.load(os.path.join("assets", "arrow_right.png")).convert_alpha(),(200,200))
 SKIN_CHANGE_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "skin_change_button.png")).convert_alpha(),(900,300))
 BACK_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "back_button.png")).convert_alpha(),(200,200))
 
@@ -52,6 +52,7 @@ BACK_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "bac
 #background
 STARTING_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "menu.png")).convert(),(WIDTH,HEIGHT))
 OPTIONS_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "options.png")).convert(),(WIDTH,HEIGHT))
+SKIN_CHANGE_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "skin_change_background.png")).convert(),(WIDTH,HEIGHT))
 BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "kosmos2.png")).convert(),(WIDTH,HEIGHT))
 OVERLAY=pygame.transform.scale(pygame.image.load(os.path.join("assets", "overlay.png")).convert_alpha(),(WIDTH,HEIGHT))
 HP_BORDER=pygame.transform.scale(pygame.image.load(os.path.join("assets", "hp_border.png")).convert_alpha(),(300,50))
@@ -335,13 +336,13 @@ def collide(obj1, obj2):
 
 def ship_skin_showcase(x):
     if x==0:
-        WINDOW.blit(pygame.transform.scale(PLAYER_SHIP,(300,300)),(WIDTH/2-150,HEIGHT/2-150))
+        WINDOW.blit(pygame.transform.scale(PLAYER_SHIP,(350,350)),(WIDTH/2-175,HEIGHT/2-250))
     elif x==1:
-        WINDOW.blit(pygame.transform.scale(PLAYER_SHIP_BLUE,(300,300)),(WIDTH/2-155,HEIGHT/2-150))
+        WINDOW.blit(pygame.transform.scale(PLAYER_SHIP_BLUE,(350,350)),(WIDTH/2-175,HEIGHT/2-250))
     elif x==2:
-        WINDOW.blit(pygame.transform.scale(PLAYER_SHIP_WHITE,(300,300)),(WIDTH/2-155,HEIGHT/2-150))
+        WINDOW.blit(pygame.transform.scale(PLAYER_SHIP_WHITE,(350,350)),(WIDTH/2-175,HEIGHT/2-250))
     elif x==3:
-        WINDOW.blit(pygame.transform.scale(PLAYER_SHIP_YELLOW,(300,300)),(WIDTH/2-155,HEIGHT/2-150))
+        WINDOW.blit(pygame.transform.scale(PLAYER_SHIP_YELLOW,(350,350)),(WIDTH/2-175,HEIGHT/2-250))
 
 
 
@@ -380,8 +381,8 @@ def main():
     option_button=Button(WIDTH/2+25 , HEIGHT/2+200, OPTIONS_BUTTON)
     records_button=Button(WIDTH/2-315 , HEIGHT/2+300, RECORDS_BUTTON)
     exit_button=Button(WIDTH/2+25 , HEIGHT/2+300, EXIT_BUTTON)
-    arrow_l=Button(WIDTH/2-425 , HEIGHT/2-50, ARROW_LEFT)
-    arrow_r=Button(WIDTH/2+275 , HEIGHT/2-50, ARROW_RIGHT)
+    arrow_l=Button(WIDTH/2-250 , HEIGHT/2+250, ARROW_LEFT)
+    arrow_r=Button(WIDTH/2+50 , HEIGHT/2+250, ARROW_RIGHT)
     opt1=Button(WIDTH/2-450 , HEIGHT/2-400, SKIN_CHANGE_BUTTON)
     opt2=Button(WIDTH/2-150 , HEIGHT/2, OPTIONS_BUTTON)
     back_button=Button(0,0, BACK_BUTTON)
@@ -434,7 +435,7 @@ def main():
                 if back_button.draw():
                     options=False
             elif options_skins ==True:
-                WINDOW.blit(OPTIONS_BACKGROUND,(0,0))
+                WINDOW.blit(SKIN_CHANGE_BACKGROUND,(0,0))
                 if back_button.draw():
                     options_skins=False
                     options=True
