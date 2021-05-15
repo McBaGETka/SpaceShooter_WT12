@@ -68,6 +68,8 @@ GAME_OVER=pygame.transform.scale(pygame.image.load(os.path.join("assets", "game_
 pygame.mixer.music.load("assets/bg_song.ogg")
 PLAYER_SHOOT=pygame.mixer.Sound("assets/player_shoot.wav")
 PLAYER_SHOOT.set_volume(0.05)
+ENEMY_HIT=pygame.mixer.Sound("assets/enemy_hit.wav")
+ENEMY_HIT.set_volume(0.05)
 
 
 
@@ -213,6 +215,7 @@ class Player(Ship):
             else:
                 for obj in objs:
                     if bullet.collision(obj):
+                        pygame.mixer.Sound.play(ENEMY_HIT)
                         self.points+=obj.return_value()
                         objs.remove(obj)
                         
