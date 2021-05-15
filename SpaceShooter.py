@@ -506,7 +506,7 @@ def main():
                 lost = True
                 lost_count += 1
                 ending_screen = True
-            if level==2:
+            if level==5:
                 ending_screen=True
             if len(enemies)+len(enemies_charge) == 0:
                 level += 1
