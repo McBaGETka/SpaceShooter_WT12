@@ -5,6 +5,8 @@ import ctypes
 import random
 pygame.font.init()
 
+from pygame import mixer
+
 user32 = ctypes.windll.user32
 
 
@@ -14,6 +16,7 @@ print(WIDTH,HEIGHT)
 
 pygame.display.set_caption('SpaceShooter')
 WINDOW=pygame.display.set_mode((WIDTH,HEIGHT),pygame.FULLSCREEN)
+mixer.init()
 
 #enemy data
 ENEMY_SHIP=pygame.transform.scale(pygame.image.load(os.path.join("assets", "przeciwnik.png")).convert_alpha(),(75,75))
@@ -57,6 +60,15 @@ HP_BORDER=pygame.transform.scale(pygame.image.load(os.path.join("assets", "hp_bo
 #graphics
 VICTORY=pygame.transform.scale(pygame.image.load(os.path.join("assets", "victory.png")).convert_alpha(),(1200,400))
 GAME_OVER=pygame.transform.scale(pygame.image.load(os.path.join("assets", "game_over.png")).convert_alpha(),(600,200))
+
+
+
+#SOUNDS
+pygame.mixer.music.load("assets/bg_song.ogg")
+PLAYER_SHOOT=pygame.mixer.Sound("assets/player_shoot.wav")
+PLAYER_SHOOT.set_volume(0.05)
+
+
 
 class Button():
 	def __init__(self, x, y, image):
@@ -144,6 +156,7 @@ class Ship:
 
     def shoot(self):
         if self.cooldown_counter == 0:
+            pygame.mixer.Sound.play(PLAYER_SHOOT)
             bullet = Bullet(self.x + 45, self.y, self.bullet_img)
             self.bullets.append(bullet)
             self.cooldown_counter = 1
@@ -345,6 +358,7 @@ def main():
     victory=False
     ship_option=0
 
+
     main_font = pygame.font.SysFont("agency_fb", 50)
 
     spawn_rate=[[2,3,0,0,7],[1,3,7,0,5],[1,1,1,7,3]]
@@ -374,6 +388,7 @@ def main():
 
     clock = pygame.time.Clock()
     def redraw_w():
+        
         WINDOW.blit(BACKGROUND, (0,0))
 
 
@@ -401,16 +416,16 @@ def main():
         player.health -= 5
         player.border_pass()
 
-
-
+    pygame.mixer.music.set_volume(0.05)
+    pygame.mixer.music.play(-1)
 
     while run:
         clock.tick(FPS)
         keys=pygame.key.get_pressed()
-        if main_menu == True: #MAIN MENU LOOP
+        if main_menu == True:
+            #MAIN MENU LOOP
             if options==True:
                 WINDOW.blit(OPTIONS_BACKGROUND,(0,0))
-   
                 if opt1.draw():
                     options_skins=True
                     options=False
@@ -435,6 +450,9 @@ def main():
                 WINDOW.blit(STARTING_BACKGROUND,(0,0))
                 if start_button.draw():
                     main_menu=False
+                    pygame.mixer.music.unload
+                    pygame.mixer.music.load("assets/bg_song_2.ogg")
+                    pygame.mixer.music.play(-1)
                 if option_button.draw():
                     options=True
                 if records_button.draw():
@@ -446,12 +464,17 @@ def main():
             pygame.display.update()
             
         elif ending_screen==True:
+            pygame.mixer.music.play(-1)
             WINDOW.blit(OPTIONS_BACKGROUND,(0,0))
            
             if lost==True:
                 WINDOW.blit(GAME_OVER,(WIDTH/2-300,300))
+                
+                
             else:
                 WINDOW.blit(VICTORY,(WIDTH/2-600,300))
+               
+                
 
             score_label = main_font.render(f"Score: {player.get_points()}", 1, (180,0,255))
             WINDOW.blit(score_label, (WIDTH/2-100,700))
@@ -470,16 +493,19 @@ def main():
                 lost_count=0
                 player.points=0
                 ending_screen=False
+                pygame.mixer.music.unload
+                pygame.mixer.music.load("assets/bg_song.ogg")
+                pygame.mixer.music.play(-1)
                 
             
 
-        else: 
+        else:
             redraw_w()
             if lives <= 0 or player.health <= 0:
                 lost = True
                 lost_count += 1
                 ending_screen = True
-            if level==5:
+            if level==2:
                 ending_screen=True
             if len(enemies)+len(enemies_charge) == 0:
                 level += 1
@@ -504,6 +530,7 @@ def main():
                 player.y += player_vel
             if keys[pygame.K_SPACE]:
                 player.shoot()
+                
             if keys[pygame.K_ESCAPE]:
                 run=False
             if keys[pygame.K_r]:
