@@ -53,7 +53,7 @@ BACK_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "bac
 STARTING_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "menu.png")).convert(),(WIDTH,HEIGHT))
 OPTIONS_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "options.png")).convert(),(WIDTH,HEIGHT))
 SKIN_CHANGE_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "skin_change_background.png")).convert(),(WIDTH,HEIGHT))
-BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "kosmos2.png")).convert(),(WIDTH,HEIGHT))
+BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "kosmos1.png")).convert(),(WIDTH,HEIGHT))
 OVERLAY=pygame.transform.scale(pygame.image.load(os.path.join("assets", "overlay.png")).convert_alpha(),(WIDTH,HEIGHT))
 HP_BORDER=pygame.transform.scale(pygame.image.load(os.path.join("assets", "hp_border.png")).convert_alpha(),(300,50))
 
@@ -66,10 +66,10 @@ GAME_OVER=pygame.transform.scale(pygame.image.load(os.path.join("assets", "game_
 
 #SOUNDS
 pygame.mixer.music.load("assets/bg_song.ogg")
-PLAYER_SHOOT=pygame.mixer.Sound("assets/player_shoot.wav")
+PLAYER_SHOOT=pygame.mixer.Sound("assets/player_shoot.mp3")
 PLAYER_SHOOT.set_volume(0.05)
-ENEMY_HIT=pygame.mixer.Sound("assets/enemy_hit.wav")
-ENEMY_HIT.set_volume(0.05)
+ENEMY_HIT=pygame.mixer.Sound("assets/enemy_hit.mp3")
+ENEMY_HIT.set_volume(0.03)
 
 
 
@@ -236,8 +236,8 @@ class Player(Ship):
 
 
     def healthbar(self, window):
-        pygame.draw.rect(window, (255,0,0), (100, 200, 300, 50))
-        pygame.draw.rect(window, (0,255,0), (100, 200, 300* (self.health/self.max_health), 50))
+        pygame.draw.rect(window, (255,0,0), (100, 150, 300, 50))
+        pygame.draw.rect(window, (0,255,0), (100, 150, 300* (self.health/self.max_health), 50))
 
 
 class Enemy(Ship):
@@ -363,7 +363,7 @@ def main():
     ship_option=0
 
 
-    main_font = pygame.font.SysFont("agency_fb", 50)
+    main_font = pygame.font.SysFont("agency_fb", 80)
 
     spawn_rate=[[2,3,0,0,7],[1,3,7,0,5],[1,1,1,7,3]]
     player = Player(WIDTH/2-45,650,ship_option)
@@ -402,18 +402,18 @@ def main():
         for enemy_charge in enemies_charge:
             enemy_charge.draw(WINDOW)
         
-        score_label = main_font.render(f"Score: {player.get_points()}", 1, (180,0,255))
-        level_label = main_font.render(f"Level: {level}", 1, (0,200,255))
+        score_label = main_font.render(f"{player.get_points()}", 1, (255,174,0))
+        level_label = main_font.render(f"{level}", 1, (255,174,0))
         WINDOW.blit(OVERLAY, (0,0))
 
-        WINDOW.blit(score_label, (WIDTH-325,250))
-        WINDOW.blit(level_label, (100,350))
+        WINDOW.blit(score_label, (WIDTH-300,250))
+        WINDOW.blit(level_label, (380,280))
 
 
         
 
         player.draw(WINDOW)
-        WINDOW.blit(HP_BORDER,(100,200))
+        WINDOW.blit(HP_BORDER,(100,150))
         pygame.display.update()
 
     def off():
