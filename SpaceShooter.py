@@ -12,7 +12,7 @@ user32 = ctypes.windll.user32
 
 WIDTH =  user32.GetSystemMetrics(0)
 HEIGHT =  user32.GetSystemMetrics(1)
-print(WIDTH,HEIGHT)
+#print(WIDTH,HEIGHT)
 
 pygame.display.set_caption('SpaceShooter')
 WINDOW=pygame.display.set_mode((WIDTH,HEIGHT),pygame.FULLSCREEN)
@@ -44,7 +44,7 @@ RECORDS_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "
 EXIT_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "exit_button.png")).convert_alpha(),(300,100))
 ARROW_LEFT=pygame.transform.scale(pygame.image.load(os.path.join("assets", "arrow_left.png")).convert_alpha(),(200,200))
 ARROW_RIGHT=pygame.transform.scale(pygame.image.load(os.path.join("assets", "arrow_right.png")).convert_alpha(),(200,200))
-SKIN_CHANGE_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "skin_change_button.png")).convert_alpha(),(900,300))
+SKIN_CHANGE_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "skin_change_button.png")).convert_alpha(),(300,100))
 BACK_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "back_button.png")).convert_alpha(),(200,200))
 
 
@@ -56,11 +56,8 @@ SKIN_CHANGE_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("as
 BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "kosmos1.png")).convert(),(WIDTH,HEIGHT))
 OVERLAY=pygame.transform.scale(pygame.image.load(os.path.join("assets", "overlay.png")).convert_alpha(),(WIDTH,HEIGHT))
 HP_BORDER=pygame.transform.scale(pygame.image.load(os.path.join("assets", "hp_border.png")).convert_alpha(),(300,50))
-
-
-#graphics
-VICTORY=pygame.transform.scale(pygame.image.load(os.path.join("assets", "victory.png")).convert_alpha(),(1200,400))
-GAME_OVER=pygame.transform.scale(pygame.image.load(os.path.join("assets", "game_over.png")).convert_alpha(),(600,200))
+VICTORY=pygame.transform.scale(pygame.image.load(os.path.join("assets", "victory.png")).convert(),(WIDTH,HEIGHT))
+GAME_OVER=pygame.transform.scale(pygame.image.load(os.path.join("assets", "game_over.png")).convert(),(WIDTH,HEIGHT))
 
 
 
@@ -68,36 +65,38 @@ GAME_OVER=pygame.transform.scale(pygame.image.load(os.path.join("assets", "game_
 pygame.mixer.music.load("assets/bg_song.ogg")
 PLAYER_SHOOT=pygame.mixer.Sound("assets/player_shoot.mp3")
 PLAYER_SHOOT.set_volume(0.05)
+CLICK_SOUND=pygame.mixer.Sound("assets/click.wav")
+CLICK_SOUND.set_volume(0.05)
 ENEMY_HIT=pygame.mixer.Sound("assets/enemy_hit.mp3")
 ENEMY_HIT.set_volume(0.03)
 
 
-
 class Button():
-	def __init__(self, x, y, image):
-		self.image = image
-		self.rect = self.image.get_rect()
-		self.rect.x = x
-		self.rect.y = y
-		self.clicked = False
+    def __init__(self, x, y, image):
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        self.clicked = False
 
-	def draw(self):
-		action = False
+    def draw(self):
+        action = False
 
-		
-		pos = pygame.mouse.get_pos()
+        pos = pygame.mouse.get_pos()
+        if self.rect.collidepoint(pos):
+            if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
+                action = True
+                self.clicked = True
+                pygame.mixer.Sound.play(CLICK_SOUND)
 
-		if self.rect.collidepoint(pos):
-			if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
-				action = True
-				self.clicked = True
+        if pygame.mouse.get_pressed()[0] == 0:
+            self.clicked = False
 
-		if pygame.mouse.get_pressed()[0] == 0:
-			self.clicked = False
 
-		WINDOW.blit(self.image, self.rect)
+        WINDOW.blit(self.image, self.rect)
+        
 
-		return action
+        return action
 
 
 class Bullet:
@@ -132,12 +131,12 @@ class Bullet_SLS(Bullet): #full name Bullet Spread Left Short
 class Bullet_SRL(Bullet): #full name Bullet Spread Right Long
     def move(self, vel):
         self.y += vel
-        self.x += vel*0.5
+        self.x += vel*0.1
 
 class Bullet_SLL(Bullet): #full name Bullet Spread Left Long
     def move(self, vel):
         self.y += vel
-        self.x -= vel*0.5
+        self.x -= vel*0.1
 
 
 class Ship:
@@ -364,6 +363,7 @@ def main():
 
 
     main_font = pygame.font.SysFont("agency_fb", 80)
+    second_font = pygame.font.SysFont("agency_fb", 120)
 
     spawn_rate=[[2,3,0,0,7],[1,3,7,0,5],[1,1,1,7,3]]
     player = Player(WIDTH/2-45,650,ship_option)
@@ -386,8 +386,6 @@ def main():
     exit_button=Button(WIDTH/2+25 , HEIGHT/2+300, EXIT_BUTTON)
     arrow_l=Button(WIDTH/2-250 , HEIGHT/2+250, ARROW_LEFT)
     arrow_r=Button(WIDTH/2+50 , HEIGHT/2+250, ARROW_RIGHT)
-    opt1=Button(WIDTH/2-450 , HEIGHT/2-400, SKIN_CHANGE_BUTTON)
-    opt2=Button(WIDTH/2-150 , HEIGHT/2, OPTIONS_BUTTON)
     back_button=Button(0,0, BACK_BUTTON)
 
     clock = pygame.time.Clock()
@@ -406,7 +404,7 @@ def main():
         level_label = main_font.render(f"{level}", 1, (255,174,0))
         WINDOW.blit(OVERLAY, (0,0))
 
-        WINDOW.blit(score_label, (WIDTH-300,250))
+        WINDOW.blit(score_label, (WIDTH-250-score_label.get_rect().width/2,250))
         WINDOW.blit(level_label, (380,280))
 
 
@@ -429,19 +427,10 @@ def main():
         if main_menu == True:
             #MAIN MENU LOOP
             if options==True:
-                WINDOW.blit(OPTIONS_BACKGROUND,(0,0))
-                if opt1.draw():
-                    options_skins=True
-                    options=False
-                if opt2.draw():
-                    print("cos")            
-                if back_button.draw():
-                    options=False
-            elif options_skins ==True:
                 WINDOW.blit(SKIN_CHANGE_BACKGROUND,(0,0))
                 if back_button.draw():
-                    options_skins=False
-                    options=True
+                    main_menu=True
+                    options=False
                 if arrow_l.draw() and ship_option>0:
                     ship_option-=1
                 if arrow_r.draw()and ship_option<3:
@@ -457,6 +446,7 @@ def main():
                     pygame.mixer.music.unload
                     pygame.mixer.music.load("assets/bg_song_2.ogg")
                     pygame.mixer.music.play(-1)
+                    pygame.mouse.set_visible(False)
                 if option_button.draw():
                     options=True
                 if records_button.draw():
@@ -468,20 +458,21 @@ def main():
             pygame.display.update()
             
         elif ending_screen==True:
-            pygame.mixer.music.play(-1)
-            WINDOW.blit(OPTIONS_BACKGROUND,(0,0))
-           
+            pygame.mouse.set_visible(True)
+            
+                    
             if lost==True:
-                WINDOW.blit(GAME_OVER,(WIDTH/2-300,300))
+                WINDOW.blit(GAME_OVER,(0,0))
+                score_label = second_font.render(f"{player.get_points()}", 1, (255,21,0))
                 
-                
+                               
             else:
-                WINDOW.blit(VICTORY,(WIDTH/2-600,300))
-               
+                WINDOW.blit(VICTORY,(0,0))
+                score_label = second_font.render(f"{player.get_points()}", 1, (0,234,255))
                 
-
-            score_label = main_font.render(f"Score: {player.get_points()}", 1, (180,0,255))
-            WINDOW.blit(score_label, (WIDTH/2-100,700))
+               
+              
+            WINDOW.blit(score_label, (WIDTH/2-score_label.get_rect().width/2,450))
             pygame.display.update()
             if keys[pygame.K_e]:
                 run=False
@@ -509,8 +500,14 @@ def main():
                 lost = True
                 lost_count += 1
                 ending_screen = True
-            if level==5:
+                pygame.mixer.music.unload
+                pygame.mixer.music.load("assets/lost_theme.mp3")
+                pygame.mixer.music.play(-1)
+            if level==2:
                 ending_screen=True
+                pygame.mixer.music.unload
+                pygame.mixer.music.load("assets/win_theme.mp3")
+                pygame.mixer.music.play(-1)
             if len(enemies)+len(enemies_charge) == 0:
                 level += 1
                 for i in range(spawn_rate[0][level-1]):
