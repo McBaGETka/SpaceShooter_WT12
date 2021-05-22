@@ -47,6 +47,9 @@ ARROW_RIGHT=pygame.transform.scale(pygame.image.load(os.path.join("assets", "arr
 SKIN_CHANGE_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "skin_change_button.png")).convert_alpha(),(300,100))
 BACK_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "back_button.png")).convert_alpha(),(200,200))
 
+#animations
+EXPLOSION=[pygame.transform.scale(pygame.image.load(os.path.join("assets/anim", "e1.png")).convert_alpha(),(75,75)),pygame.transform.scale(pygame.image.load(os.path.join("assets/anim", "e2.png")).convert_alpha(),(75,75)),pygame.transform.scale(pygame.image.load(os.path.join("assets/anim", "e3.png")).convert_alpha(),(75,75))]
+
 
 
 #background
@@ -343,8 +346,6 @@ def ship_skin_showcase(x):
         WINDOW.blit(pygame.transform.scale(PLAYER_SHIP_YELLOW,(350,350)),(WIDTH/2-175,HEIGHT/2-250))
 
 
-
-
 def main():
     run = True
     FPS = 60
@@ -354,14 +355,16 @@ def main():
     options=False
     options_skins=False
     ending_screen=False
+    records=False
     victory=False
     ship_option=0
-
+    global ex_count
+    ex_count=0
     all_bullets=[]
-
 
     main_font = pygame.font.SysFont("agency_fb", 80)
     second_font = pygame.font.SysFont("agency_fb", 120)
+    record_font = pygame.font.SysFont("agency_fb", 100)
 
     spawn_rate=[[5,5,5,5,5],[1,1,1,1,1],[3,3,3,3,3]]
     player = Player(WIDTH/2-45,650,ship_option)
@@ -388,8 +391,10 @@ def main():
 
     clock = pygame.time.Clock()
     def redraw_w():
-        
+        global ex_count
         WINDOW.blit(BACKGROUND, (0,0))
+        if ex_count >= 60:
+            ex_count=0;
 
         for bullet in all_bullets:
             bullet.draw(WINDOW)
@@ -402,7 +407,9 @@ def main():
         score_label = main_font.render(f"{player.get_points()}", 1, (255,174,0))
         level_label = main_font.render(f"{level}", 1, (255,174,0))
         WINDOW.blit(OVERLAY, (0,0))
-
+        WINDOW.blit(EXPLOSION[ex_count//20], (1000,500))
+        ex_count+=1
+        print(ex_count)
         WINDOW.blit(score_label, (WIDTH-250-score_label.get_rect().width/2,250))
         WINDOW.blit(level_label, (380,280))
 
@@ -437,6 +444,10 @@ def main():
                 
                 ship_skin_showcase(ship_option)
                 player = Player(WIDTH/2-45,650,ship_option)
+            elif records==True:
+                WINDOW.blit(BACKGROUND,(0,0))
+                if back_button.draw():
+                    records=False
 
             else:
                 WINDOW.blit(STARTING_BACKGROUND,(0,0))
