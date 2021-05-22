@@ -48,9 +48,29 @@ SKIN_CHANGE_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets
 BACK_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "back_button.png")).convert_alpha(),(200,200))
 
 #animations
-EXPLOSION=[pygame.transform.scale(pygame.image.load(os.path.join("assets/anim", "e1.png")).convert_alpha(),(75,75)),pygame.transform.scale(pygame.image.load(os.path.join("assets/anim", "e2.png")).convert_alpha(),(75,75)),pygame.transform.scale(pygame.image.load(os.path.join("assets/anim", "e3.png")).convert_alpha(),(75,75))]
+EXPLOSION=[pygame.transform.scale(pygame.image.load(os.path.join("assets/anim", "e1.png")).convert_alpha(),(75,75)),
+pygame.transform.scale(pygame.image.load(os.path.join("assets/anim", "e2.png")).convert_alpha(),(75,75)),
+pygame.transform.scale(pygame.image.load(os.path.join("assets/anim", "e3.png")).convert_alpha(),(75,75))]
 
+SHIP1=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1a.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1b.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1c.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1d.png")).convert_alpha(),(75,75))]
 
+SHIP2=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2a.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2b.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2c.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2d.png")).convert_alpha(),(75,75))]
+
+SHIP3=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zolty", "statek3a.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zolty", "statek3b.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zolty", "statek3c.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zolty", "statek3d.png")).convert_alpha(),(75,75))]
+
+SHIP4=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zielony", "statek4a.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zielony", "statek4b.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zielony", "statek4c.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zielony", "statek4d.png")).convert_alpha(),(75,75))]
 
 #background
 STARTING_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "menu.png")).convert(),(WIDTH,HEIGHT))
@@ -408,6 +428,11 @@ def main():
         level_label = main_font.render(f"{level}", 1, (255,174,0))
         WINDOW.blit(OVERLAY, (0,0))
         WINDOW.blit(EXPLOSION[ex_count//20], (1000,500))
+
+        WINDOW.blit(SHIP1[ex_count//20], (1000,500))
+        WINDOW.blit(SHIP2[ex_count//20], (1000,500))
+        WINDOW.blit(SHIP3[ex_count//20], (1000,500))
+        WINDOW.blit(SHIP4[ex_count//20], (1000,500))
         ex_count+=1
         print(ex_count)
         WINDOW.blit(score_label, (WIDTH-250-score_label.get_rect().width/2,250))
