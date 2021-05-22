@@ -113,7 +113,10 @@ class Bullet:
         self.y += vel
 
     def off_screen(self, height):
-        return not self.y <= height and self.y >= 0
+        if self.y <= height and self.y >= 0:
+            return False
+        else:
+            return True
 
     def collision(self, obj):
         return collide(self, obj)
@@ -162,16 +165,6 @@ class Ship:
             bullet = Bullet(self.x + 45, self.y, self.bullet_img)
             self.bullets.append(bullet)
             self.cooldown_counter = 1
-
-    def move_bullet(self, vel, obj):
-        self.cooldown()
-        for bullet in self.bullets:
-            bullet.move(vel)
-            if bullet.off_screen(HEIGHT):
-                self.bullets.remove(bullet)
-            elif bullet.collision(obj):
-                obj.health -= 10
-                self.bullets.remove(bullet)
 
    
            
@@ -250,11 +243,12 @@ class Enemy(Ship):
     def move(self, vel):
         self.y += vel
 
-    def shoot(self):
-        if self.cooldown_counter == 0 and random.randrange(60)==1:
-            bullet = Bullet(self.x+45, self.y+100, self.bullet_img)
-            self.bullets.append(bullet)
-            self.cooldown_counter = 1
+    def shoot(self,objs):
+        if self.cooldown_counter==0 and random.randrange(60)==1:
+            bullet = Bullet(self.x+37, self.y+80, self.bullet_img)
+            objs.append(bullet)
+            self.cooldown_counter=1
+            
     
     def return_value(self):
         return self.value
@@ -312,19 +306,21 @@ class Enemy_Spread(Ship):
     def move(self, vel):
         self.y += vel
 
-    def shoot(self):
-        if self.cooldown_counter == 0 and random.randrange(120)==1:
-            bullet = Bullet(self.x+45, self.y+100, self.bullet_img)
-            bulletsrs = Bullet_SRS(self.x+45, self.y+100, self.bullet_img)
-            bulletsls = Bullet_SLS(self.x+45, self.y+100, self.bullet_img)
-            bulletsrl = Bullet_SRL(self.x+45, self.y+100, self.bullet_img)
-            bulletsll = Bullet_SLL(self.x+45, self.y+100, self.bullet_img)
-            self.bullets.append(bullet)
-            self.bullets.append(bulletsrs)
-            self.bullets.append(bulletsls)
-            self.bullets.append(bulletsrl)
-            self.bullets.append(bulletsll)
-            self.cooldown_counter = 1
+    def shoot(self,objs):
+        if self.cooldown_counter==0:
+            bullet = Bullet(self.x+37, self.y+50, self.bullet_img)
+            bulletsrs = Bullet_SRS(self.x+37, self.y+50, self.bullet_img)
+            bulletsls = Bullet_SLS(self.x+37, self.y+50, self.bullet_img)
+            bulletsrl = Bullet_SRL(self.x+37, self.y+50, self.bullet_img)
+            bulletsll = Bullet_SLL(self.x+37, self.y+50, self.bullet_img)
+            objs.append(bullet)
+            objs.append(bulletsrs)
+            objs.append(bulletsls)
+            objs.append(bulletsrl)
+            objs.append(bulletsll)
+            self.cooldown_counter=1
+            
+
 
     
     def return_value(self):
@@ -361,11 +357,13 @@ def main():
     victory=False
     ship_option=0
 
+    all_bullets=[]
+
 
     main_font = pygame.font.SysFont("agency_fb", 80)
     second_font = pygame.font.SysFont("agency_fb", 120)
 
-    spawn_rate=[[2,3,0,0,7],[1,3,7,0,5],[1,1,1,7,3]]
+    spawn_rate=[[5,5,5,5,5],[1,1,1,1,1],[3,3,3,3,3]]
     player = Player(WIDTH/2-45,650,ship_option)
 
     enemies = []
@@ -393,7 +391,8 @@ def main():
         
         WINDOW.blit(BACKGROUND, (0,0))
 
-
+        for bullet in all_bullets:
+            bullet.draw(WINDOW)
         for enemy in enemies:
             enemy.draw(WINDOW)
 
@@ -496,19 +495,32 @@ def main():
 
         else:
             redraw_w()
-            if lives <= 0 or player.health <= 0:
+            if player.health <= 0:
                 lost = True
                 lost_count += 1
                 ending_screen = True
                 pygame.mixer.music.unload
                 pygame.mixer.music.load("assets/lost_theme.mp3")
                 pygame.mixer.music.play(-1)
-            if level==2:
+            if level==3:
                 ending_screen=True
                 pygame.mixer.music.unload
                 pygame.mixer.music.load("assets/win_theme.mp3")
                 pygame.mixer.music.play(-1)
-            if len(enemies)+len(enemies_charge) == 0:
+
+            if ending_screen == True:
+                for enemy_charge in enemies_charge[:]:
+                    enemies_charge.remove(enemy_charge)
+                    print("usuwam charge")
+                for enemy in enemies[:]:
+                    enemies.remove(enemy)
+                    print("usuwam zwykły")
+                for bullet in all_bullets[:]:
+                    all_bullets.remove(bullet)
+                    print("suswam bullet")
+                
+
+            if len(enemies)+len(enemies_charge) == 0 and ending_screen == False:
                 level += 1
                 for i in range(spawn_rate[0][level-1]):
                     enemy = Enemy(random.randrange(600, WIDTH-600), random.randrange(-1500, -100))
@@ -531,16 +543,13 @@ def main():
                 player.y += player_vel
             if keys[pygame.K_SPACE]:
                 player.shoot()
-                
             if keys[pygame.K_ESCAPE]:
                 run=False
-            if keys[pygame.K_r]:
-                main_menu=True
 
             for enemy in enemies[:]:
-                enemy.shoot()
+                enemy.shoot(all_bullets)
+                enemy.cooldown()
                 enemy.move(enemy_vel)
-                enemy.move_bullet(bullet_vel, player)
                 if enemy.y + enemy.get_height() > HEIGHT:
                     enemies.remove(enemy)
                     off()
@@ -551,12 +560,18 @@ def main():
                 enemy_charge.move(enemy_vel,player)
                 if collide(enemy_charge,player):
                     enemies_charge.remove(enemy_charge)
-                    player.health-=15
-                    
+                    player.health-=15      
                 if enemy_charge.y + enemy_charge.get_height() > HEIGHT:
                     enemies_charge.remove(enemy_charge)
                     off()
 
+            for bullet in all_bullets[:]:
+                bullet.move(bullet_vel)
+                if bullet.off_screen(HEIGHT):
+                    all_bullets.remove(bullet)
+                elif bullet.collision(player):
+                    player.health -= 10
+                    all_bullets.remove(bullet)
                 
         
         
