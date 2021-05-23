@@ -62,15 +62,15 @@ SHIP2=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/
        pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2c.png")).convert_alpha(),(75,75)),
        pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2d.png")).convert_alpha(),(75,75))]
 
-SHIP3=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zolty", "statek3a.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zolty", "statek3b.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zolty", "statek3c.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zolty", "statek3d.png")).convert_alpha(),(75,75))]
+SHIP3=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zielony", "statek4a.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zielony", "statek4b.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zielony", "statek4c.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zielony", "statek4d.png")).convert_alpha(),(75,75))]
 
-SHIP4=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zielony", "statek4a.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zielony", "statek4b.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zielony", "statek4c.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zielony", "statek4d.png")).convert_alpha(),(75,75))]
+SHIP4=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zolty", "statek3a.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zolty", "statek3b.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zolty", "statek3c.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zolty", "statek3d.png")).convert_alpha(),(75,75))]
 
 #background
 STARTING_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "menu.png")).convert(),(WIDTH,HEIGHT))
@@ -198,7 +198,6 @@ class Ship:
             self.cooldown_counter +=1
 
 
-
     def get_width(self):
         return self.ship_img.get_width()
 
@@ -209,13 +208,13 @@ class Player(Ship):
     def __init__(self,x,y,ship_options, health=100):
         super().__init__(x,y)
         if ship_options==0:
-            self.ship_img=PLAYER_SHIP
+            self.ship_img=SHIP1[ex_count//20]
         elif ship_options==1:
-            self.ship_img=PLAYER_SHIP_BLUE
+            self.ship_img=SHIP2[ex_count//20]
         elif ship_options==2:
-            self.ship_img=PLAYER_SHIP_WHITE
+            self.ship_img=SHIP3[ex_count//20]
         elif ship_options==3:
-            self.ship_img=PLAYER_SHIP_YELLOW
+            self.ship_img=SHIP4[ex_count//20]
         self.bullet_img=PLAYER_BULLET
         self.mask = pygame.mask.from_surface(self.ship_img)
         self.max_health = health
@@ -236,6 +235,18 @@ class Player(Ship):
                         
                         if bullet in self.bullets:
                             self.bullets.remove(bullet)
+
+    def anim(self,ex_count,ship_option):
+        if ship_option==0:
+            self.ship_img=SHIP1[ex_count//20]
+        elif ship_option==1:
+            self.ship_img=SHIP2[ex_count//20]
+        elif ship_option==2:
+            self.ship_img=SHIP3[ex_count//20]
+        elif ship_option==3:
+            self.ship_img=SHIP4[ex_count//20]
+
+
 
     def border_pass(self):
         self.points-=50
@@ -415,6 +426,7 @@ def main():
         WINDOW.blit(BACKGROUND, (0,0))
         if ex_count >= 60:
             ex_count=0;
+        ex_count+=1
 
         for bullet in all_bullets:
             bullet.draw(WINDOW)
@@ -427,21 +439,16 @@ def main():
         score_label = main_font.render(f"{player.get_points()}", 1, (255,174,0))
         level_label = main_font.render(f"{level}", 1, (255,174,0))
         WINDOW.blit(OVERLAY, (0,0))
-        WINDOW.blit(EXPLOSION[ex_count//20], (1000,500))
-
-        WINDOW.blit(SHIP1[ex_count//20], (1000,500))
-        WINDOW.blit(SHIP2[ex_count//20], (1000,500))
-        WINDOW.blit(SHIP3[ex_count//20], (1000,500))
-        WINDOW.blit(SHIP4[ex_count//20], (1000,500))
-        ex_count+=1
-        print(ex_count)
-        WINDOW.blit(score_label, (WIDTH-250-score_label.get_rect().width/2,250))
-        WINDOW.blit(level_label, (380,280))
 
 
         
+        
+        WINDOW.blit(score_label, (WIDTH-250-score_label.get_rect().width/2,250))
+        WINDOW.blit(level_label, (380,280))
 
+        player.anim(ex_count,ship_option)
         player.draw(WINDOW)
+
         WINDOW.blit(HP_BORDER,(100,150))
         pygame.display.update()
 
@@ -464,8 +471,10 @@ def main():
                     options=False
                 if arrow_l.draw() and ship_option>0:
                     ship_option-=1
+                    
                 if arrow_r.draw()and ship_option<3:
-                    ship_option+=1                   
+                    ship_option+=1
+                   
                 
                 ship_skin_showcase(ship_option)
                 player = Player(WIDTH/2-45,650,ship_option)
