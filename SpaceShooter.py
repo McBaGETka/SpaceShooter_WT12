@@ -72,16 +72,16 @@ SHIP4=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/
        pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zolty", "statek3d.png")).convert_alpha(),(75,75))]
 
 #button animations
-START_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "start_button.png")).convert_alpha(),(300,100)),
+START_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets", "start_button.png")).convert_alpha(),(300,100)),
               pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "start_button1.png")).convert_alpha(),(300,100))]
 
-OPTIONS_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "options_button.png")).convert_alpha(),(300,100)),
+OPTIONS_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets", "options_button.png")).convert_alpha(),(300,100)),
                 pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "options_button1.png")).convert_alpha(),(300,100))]
 
-RECORDS_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "records_button.png")).convert_alpha(),(300,100)),
+RECORDS_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets", "records_button.png")).convert_alpha(),(300,100)),
                 pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "records_button1.png")).convert_alpha(),(300,100))]
 
-EXIT_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "exit_button.png")).convert_alpha(),(300,100)),
+EXIT_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets", "exit_button.png")).convert_alpha(),(300,100)),
              pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "exit_button1.png")).convert_alpha(),(300,100))]
 
 ARROW_LEFT=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "arrow_left.png")).convert_alpha(),(200,200)),
@@ -90,10 +90,10 @@ ARROW_LEFT=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animat
 ARROW_RIGHT=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "arrow_right.png")).convert_alpha(),(200,200)),
              pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "arrow_right1.png")).convert_alpha(),(200,200))]
 
-SKIN_CHANGE_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "options_button.png")).convert_alpha(),(300,100)),
+SKIN_CHANGE_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets", "options_button.png")).convert_alpha(),(300,100)),
                     pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "options_button1.png")).convert_alpha(),(300,100))]
 
-BACK_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "back_button.png")).convert_alpha(),(200,200)),
+BACK_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets", "back_button.png")).convert_alpha(),(200,200)),
              pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "back_button1.png")).convert_alpha(),(200,200))]
 
 
