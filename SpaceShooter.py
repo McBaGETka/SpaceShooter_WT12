@@ -453,7 +453,7 @@ def main():
     def redraw_w():
         global ex_count
         WINDOW.blit(BACKGROUND, (0,0))
-        if ex_count >= 60:
+        if ex_count >= 70:
             ex_count=0;
         ex_count+=1
 
