@@ -54,22 +54,30 @@ EXPLOSION=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animati
 SHIP1=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1a.png")).convert_alpha(),(75,75)),
        pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1b.png")).convert_alpha(),(75,75)),
        pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1c.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1d.png")).convert_alpha(),(75,75))]
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1d.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1c.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1b.png")).convert_alpha(),(75,75))]
 
 SHIP2=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2a.png")).convert_alpha(),(75,75)),
        pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2b.png")).convert_alpha(),(75,75)),
        pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2c.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2d.png")).convert_alpha(),(75,75))]
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2d.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2c.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2b.png")).convert_alpha(),(75,75))]
 
 SHIP3=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zielony", "statek4a.png")).convert_alpha(),(75,75)),
        pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zielony", "statek4b.png")).convert_alpha(),(75,75)),
        pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zielony", "statek4c.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zielony", "statek4d.png")).convert_alpha(),(75,75))]
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zielony", "statek4d.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zielony", "statek4c.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zielony", "statek4b.png")).convert_alpha(),(75,75))]
 
 SHIP4=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zolty", "statek3a.png")).convert_alpha(),(75,75)),
        pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zolty", "statek3b.png")).convert_alpha(),(75,75)),
        pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zolty", "statek3c.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zolty", "statek3d.png")).convert_alpha(),(75,75))]
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zolty", "statek3d.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zolty", "statek3c.png")).convert_alpha(),(75,75)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zolty", "statek3b.png")).convert_alpha(),(75,75))]
 
 #button animations
 START_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets", "start_button.png")).convert_alpha(),(300,100)),
@@ -453,7 +461,7 @@ def main():
     def redraw_w():
         global ex_count
         WINDOW.blit(BACKGROUND, (0,0))
-        if ex_count >= 70:
+        if ex_count >= 119:
             ex_count=0;
         ex_count+=1
 
