@@ -170,7 +170,7 @@ class Explosion:
         self.lifespan=0
 
     def anim(self):
-        WINDOW.blit(EXPLOSION[self.lifespan//20], (self.x, self.y))
+        WINDOW.blit(EXPLOSION[self.lifespan//10], (self.x, self.y))
         self.lifespan+=1
 
     def return_lifespan(self):
@@ -287,7 +287,7 @@ class Player(Ship):
                 for obj in objs:
                     if bullet.collision(obj):
                         pygame.mixer.Sound.play(ENEMY_HIT)
-                        explosion=Explosion(obj.x,obj.y)
+                        explosion=Explosion(bullet.x-25,bullet.y-20)
                         expl.append(explosion)
                         if self.flawless==True:
                             multiplier+=0.5
@@ -581,7 +581,7 @@ def main():
         for enemy_charge in enemies_charge:
             enemy_charge.draw(WINDOW)
         for explosion in explosions:
-            if explosion.return_lifespan()>59:
+            if explosion.return_lifespan()>49:
                 explosions.remove(explosion)
             else:
                 explosion.anim()
