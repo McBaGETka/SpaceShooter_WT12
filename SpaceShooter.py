@@ -159,6 +159,21 @@ class Button():
         return action
 
 
+
+class Explosion:
+    def __init__(self,x,y):
+        self.x=x
+        self.y=y
+        self.lifespan=0
+
+    def anim(self):
+        WINDOW.blit(EXPLOSION[self.lifespan//20], (self.x, self.y))
+        self.lifespan+=1
+
+    def return_lifespan(self):
+        return self.lifespan
+
+
 class Bullet:
     def __init__(self,x,y,img):
         self.x=x
@@ -257,7 +272,7 @@ class Player(Ship):
         self.max_health = health
         self.points=0
 
-    def move_bullet(self, vel, objs):
+    def move_bullet(self, vel, objs,expl):
         self.cooldown()
         for bullet in self.bullets:
             bullet.move(vel)
@@ -267,6 +282,8 @@ class Player(Ship):
                 for obj in objs:
                     if bullet.collision(obj):
                         pygame.mixer.Sound.play(ENEMY_HIT)
+                        explosion=Explosion(obj.x,obj.y)
+                        expl.append(explosion)
                         self.points+=obj.return_value()
                         objs.remove(obj)
                         
@@ -429,6 +446,7 @@ def main():
     global ex_count
     ex_count=0
     all_bullets=[]
+    explosions=[]
 
     main_font = pygame.font.SysFont("agency_fb", 80)
     second_font = pygame.font.SysFont("agency_fb", 120)
@@ -472,6 +490,14 @@ def main():
 
         for enemy_charge in enemies_charge:
             enemy_charge.draw(WINDOW)
+        for explosion in explosions:
+            if explosion.return_lifespan()>59:
+                explosions.remove(explosion)
+            else:
+                explosion.anim()
+
+
+
         
         score_label = main_font.render(f"{player.get_points()}", 1, (255,174,0))
         level_label = main_font.render(f"{level}", 1, (255,174,0))
@@ -593,13 +619,12 @@ def main():
             if ending_screen == True:
                 for enemy_charge in enemies_charge[:]:
                     enemies_charge.remove(enemy_charge)
-                    print("usuwam charge")
                 for enemy in enemies[:]:
                     enemies.remove(enemy)
-                    print("usuwam zwykły")
                 for bullet in all_bullets[:]:
                     all_bullets.remove(bullet)
-                    print("suswam bullet")
+                for explosion in explosions[:]:
+                    explosions.remove(explosion)
                 
 
             if len(enemies)+len(enemies_charge) == 0 and ending_screen == False:
@@ -659,8 +684,8 @@ def main():
         
         
         
-        player.move_bullet(-10, enemies)
-        player.move_bullet(0, enemies_charge)# to juz nie jest main game loop
+        player.move_bullet(-10, enemies,explosions)
+        player.move_bullet(0, enemies_charge,explosions)# to juz nie jest main game loop
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run=False
