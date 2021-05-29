@@ -271,9 +271,11 @@ class Player(Ship):
         self.mask = pygame.mask.from_surface(self.ship_img)
         self.max_health = health
         self.points=0
+        self.flawless=True
 
     def move_bullet(self, vel, objs,expl):
         self.cooldown()
+        global multiplier
         for bullet in self.bullets:
             bullet.move(vel)
             if bullet.off_screen(HEIGHT):
@@ -284,11 +286,25 @@ class Player(Ship):
                         pygame.mixer.Sound.play(ENEMY_HIT)
                         explosion=Explosion(obj.x,obj.y)
                         expl.append(explosion)
-                        self.points+=obj.return_value()
+                        if self.flawless==True:
+                            multiplier+=0.5
+                        else:
+                            multiplier=1
+                            self.flawless=True
+
+
+                        self.points+=obj.return_value()*multiplier  
                         objs.remove(obj)
                         
                         if bullet in self.bullets:
                             self.bullets.remove(bullet)
+
+    def get_hit(self,val):
+        self.flawless=False
+        multiplier=1
+        self.health -= val
+
+
 
     def anim(self,ex_count,ship_option):
         if ship_option==0:
@@ -443,8 +459,14 @@ def main():
     records=False
     victory=False
     ship_option=0
+
     global ex_count
     ex_count=0
+    global lazy_timer
+    lazy_timer=0
+    global multiplier
+    multiplier=1
+
     all_bullets=[]
     explosions=[]
 
@@ -457,6 +479,7 @@ def main():
 
     enemies = []
     enemies_charge = []
+    
 
     wave_length = 1
     enemy_vel = 3
@@ -478,6 +501,8 @@ def main():
     clock = pygame.time.Clock()
     def redraw_w():
         global ex_count
+        global lazy_timer
+        global multiplier
         WINDOW.blit(BACKGROUND, (0,0))
         if ex_count >= 119:
             ex_count=0;
@@ -496,10 +521,15 @@ def main():
             else:
                 explosion.anim()
 
-
+        if lazy_timer>60:
+            player.points-=10
+            lazy_timer=0
+        else:
+            lazy_timer+=1
 
         
-        score_label = main_font.render(f"{player.get_points()}", 1, (255,174,0))
+        score_label = main_font.render(f"{int(player.get_points())}", 1, (255,174,0))
+        combo = main_font.render(f"x{multiplier}", 1, (255,174,0))
         level_label = main_font.render(f"{level}", 1, (255,174,0))
         WINDOW.blit(OVERLAY, (0,0))
 
@@ -507,6 +537,7 @@ def main():
         
         
         WINDOW.blit(score_label, (WIDTH-250-score_label.get_rect().width/2,250))
+        WINDOW.blit(combo, (WIDTH-250-combo.get_rect().width/2,350))
         WINDOW.blit(level_label, (380,280))
 
         player.anim(ex_count,ship_option)
@@ -516,7 +547,10 @@ def main():
         pygame.display.update()
 
     def off():
+        global multiplier
         player.health -= 5
+        player.flawless=False
+        multiplier=1
         player.border_pass()
 
     pygame.mixer.music.set_volume(0.05)
@@ -570,12 +604,12 @@ def main():
                     
             if lost==True:
                 WINDOW.blit(GAME_OVER,(0,0))
-                score_label = second_font.render(f"{player.get_points()}", 1, (255,21,0))
+                score_label = second_font.render(f"{int(player.get_points())}", 1, (255,21,0))
                 
                                
             else:
                 WINDOW.blit(VICTORY,(0,0))
-                score_label = second_font.render(f"{player.get_points()}", 1, (0,234,255))
+                score_label = second_font.render(f"{int(player.get_points())}", 1, (0,234,255))
                 
                
               
@@ -667,7 +701,7 @@ def main():
                 enemy_charge.move(enemy_vel,player)
                 if collide(enemy_charge,player):
                     enemies_charge.remove(enemy_charge)
-                    player.health-=15      
+                    player.get_hit(15)
                 if enemy_charge.y + enemy_charge.get_height() > HEIGHT:
                     enemies_charge.remove(enemy_charge)
                     off()
@@ -677,7 +711,7 @@ def main():
                 if bullet.off_screen(HEIGHT):
                     all_bullets.remove(bullet)
                 elif bullet.collision(player):
-                    player.health -= 10
+                    player.get_hit(10)
                     all_bullets.remove(bullet)
                 
         
