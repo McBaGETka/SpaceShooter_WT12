@@ -49,7 +49,9 @@ PLAYER_BULLET=pygame.transform.scale(pygame.image.load(os.path.join("assets", "p
 #animations
 EXPLOSION=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/explosion", "e1.png")).convert_alpha(),(75,75)),
            pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/explosion", "e2.png")).convert_alpha(),(75,75)),
-           pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/explosion", "e3.png")).convert_alpha(),(75,75))]
+           pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/explosion", "e3.png")).convert_alpha(),(75,75)),
+           pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/explosion", "e4.png")).convert_alpha(),(75,75)),
+           pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/explosion", "e5.png")).convert_alpha(),(75,75))]
 
 SHIP1=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1a.png")).convert_alpha(),(75,75)),
        pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1b.png")).convert_alpha(),(75,75)),
