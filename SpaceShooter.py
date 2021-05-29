@@ -460,6 +460,13 @@ def main():
     victory=False
     ship_option=0
 
+    levels = []
+    strint = 0
+    strint2 = 0
+    string3 = 0
+    with open("levels.txt") as level_list:
+        levels = [line.split() for line in level_list]
+
     global ex_count
     ex_count=0
     global lazy_timer
@@ -474,7 +481,6 @@ def main():
     second_font = pygame.font.SysFont("agency_fb", 120)
     record_font = pygame.font.SysFont("agency_fb", 100)
 
-    spawn_rate=[[5,5,5,5,5],[1,1,1,1,1],[3,3,3,3,3]]
     player = Player(WIDTH/2-45,650,ship_option)
 
     enemies = []
@@ -644,7 +650,7 @@ def main():
                 pygame.mixer.music.unload
                 pygame.mixer.music.load("assets/lost_theme.mp3")
                 pygame.mixer.music.play(-1)
-            if level==3:
+            if level==2 and len(enemies)+len(enemies_charge) == 0:
                 ending_screen=True
                 pygame.mixer.music.unload
                 pygame.mixer.music.load("assets/win_theme.mp3")
@@ -661,17 +667,28 @@ def main():
                     explosions.remove(explosion)
                 
 
-            if len(enemies)+len(enemies_charge) == 0 and ending_screen == False:
+            elif len(enemies)+len(enemies_charge) == 0:
                 level += 1
-                for i in range(spawn_rate[0][level-1]):
-                    enemy = Enemy(random.randrange(600, WIDTH-600), random.randrange(-1500, -100))
-                    enemies.append(enemy)
-                for x in range(spawn_rate[1][level-1]):
-                    enemy_charge = Enemy_Charge(random.randrange(500, WIDTH-500), random.randrange(-20,200))
-                    enemies_charge.append(enemy_charge)
-                for i in range(spawn_rate[2][level-1]):
-                    enemy = Enemy_Spread(random.randrange(600, WIDTH-600), random.randrange(-1500, -100))
-                    enemies.append(enemy)
+                level_version = random.randrange(0,2)
+                print(level_version)
+                level_nr = (level-1)*6+level_version*3
+                for i in range(len(levels[level_nr])):
+                    strint = int(levels[level_nr][i])
+                    if strint==1:
+                        strint2 = int(levels[level_nr+2][i])
+                        strint3 = int(levels[level_nr+1][i])
+                        enemy = Enemy(strint2,strint3)
+                        enemies.append(enemy)
+                    elif strint==2:
+                        strint2 = int(levels[level_nr+2][i])
+                        strint3 = int(levels[level_nr+1][i])
+                        enemy_charge = Enemy_Charge(strint2,strint3)
+                        enemies_charge.append(enemy_charge)
+                    elif strint==3:
+                        strint2 = int(levels[level_nr+2][i])
+                        strint3 = int(levels[level_nr+1][i])
+                        enemy = Enemy_Spread(strint2,strint3)
+                        enemies.append(enemy)
   
 
             if keys[pygame.K_a] and player.x - player_vel > 520:
