@@ -294,7 +294,7 @@ class Player(Ship):
 
 
                         self.points+=obj.return_value()*multiplier  
-                        objs.remove(obj)
+                        obj.health-=100
                         
                         if bullet in self.bullets:
                             self.bullets.remove(bullet)
@@ -337,12 +337,13 @@ class Player(Ship):
 
 
 class Enemy(Ship):
-    def __init__(self, x, y, health=100):
-        super().__init__(x, y, health)
+    def __init__(self, x, y):
+        super().__init__(x, y)
         self.ship_img=ENEMY_SHIP
         self.bullet_img =ENEMY_BULLET
         self.mask = pygame.mask.from_surface(self.ship_img)
         self.value=100
+        self.health=100
 
     def move(self, vel):
         self.y += vel
@@ -358,13 +359,14 @@ class Enemy(Ship):
         return self.value
     
 class Enemy_Charge(Ship):
-    def __init__(self, x, y, health=100):
-        super().__init__(x, y, health)
+    def __init__(self, x, y):
+        super().__init__(x, y)
         self.ship_img=ENEMY_SHIP_CHARGE
         self.mask = pygame.mask.from_surface(self.ship_img)
         self.value=150
         self.idle = True
         self.on_board= False
+        self.health=100
         self.direction = random.randrange(1,11)
         
         if self.x>WIDTH/2:
@@ -400,12 +402,13 @@ class Enemy_Spread(Ship):
 
     COOLDOWN = 160
 
-    def __init__(self, x, y, health=100):
-        super().__init__(x, y, health)
+    def __init__(self, x, y ):
+        super().__init__(x, y)
         self.ship_img=ENEMY_SHIP_SHOTGUN
         self.bullet_img =ENEMY_BULLET_2
         self.mask = pygame.mask.from_surface(self.ship_img)
         self.value=100
+        self.health=100
 
     def move(self, vel):
         self.y += vel
@@ -708,6 +711,8 @@ def main():
                 enemy.shoot(all_bullets)
                 enemy.cooldown()
                 enemy.move(enemy_vel)
+                if enemy.health<=0:
+                   enemies.remove(enemy)
                 if enemy.y + enemy.get_height() > HEIGHT:
                     enemies.remove(enemy)
                     off()
@@ -716,6 +721,8 @@ def main():
 
             for enemy_charge in enemies_charge[:]:
                 enemy_charge.move(enemy_vel,player)
+                if enemy_charge.health<=0:
+                    enemies_charge.remove(enemy_charge)
                 if collide(enemy_charge,player):
                     enemies_charge.remove(enemy_charge)
                     player.get_hit(15)
