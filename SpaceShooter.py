@@ -23,6 +23,7 @@ ENEMY_SHIP=pygame.transform.scale(pygame.image.load(os.path.join("assets", "prze
 ENEMY_SHIP_CHARGE=pygame.transform.scale(pygame.image.load(os.path.join("assets", "enemy_charge.png")).convert_alpha(),(75,75))
 ENEMY_SHIP_CHARGE_ANGRY=pygame.transform.scale(pygame.image.load(os.path.join("assets", "enemy_charge_angry.png")).convert_alpha(),(75,75))
 ENEMY_SHIP_SHOTGUN=pygame.transform.scale(pygame.image.load(os.path.join("assets", "enemy_shotgun.png")).convert_alpha(),(75,40))
+BOSS_SHIP=pygame.transform.scale(pygame.image.load(os.path.join("assets", "boss_ship.png")).convert_alpha(),(500,200))
 
 ENEMY_BULLET=pygame.transform.scale(pygame.image.load(os.path.join("assets", "pocisk.png")).convert_alpha(),(8,8))
 ENEMY_BULLET_2=pygame.transform.scale(pygame.image.load(os.path.join("assets", "bullet2.png")).convert_alpha(),(10,10))
@@ -357,7 +358,60 @@ class Enemy(Ship):
     
     def return_value(self):
         return self.value
+
+
+class Boss(Ship):
+    def __init__(self, x, y):
+        super().__init__(x, y)
+        self.ship_img=BOSS_SHIP
+        self.bullet_img =ENEMY_BULLET_2
+        self.mask = pygame.mask.from_surface(self.ship_img)
+        self.value=100
+        self.health=5000
+        self.max_health=5000
+        self.value=0
+        self.direction_x=0
+        self.direction_y=1
+
+    def move(self, vel):
+        if self.direction_x==0:
+            self.x+=vel
+            if self.x + self.get_width()>=WIDTH-500:
+                self.direction_x=1
+        if self.direction_x==1:
+            self.x-=vel
+            if self.x<=500:
+                self.direction_x=0
+        if self.direction_y>0:
+            self.y+=2
+            self.direction_y+=1
+            if self.direction_y>=50:
+                self.direction_y=-1
+        if self.direction_y<0:
+            self.y-=2
+            self.direction_y-=1
+            if self.direction_y<=-51:
+                self.direction_y=1
+
+        
+
+    def shoot(self,objs):
+        if self.cooldown_counter==0 and random.randrange(60)==1:
+            bullet = Bullet(self.x+37, self.y+80, self.bullet_img)
+            objs.append(bullet)
+            self.cooldown_counter=1
+
+    def draw(self, window):
+        super().draw(window)
+        self.healthbar(window)
+            
+    def healthbar(self, window):
+        pygame.draw.rect(window, (255,0,0), (WIDTH/2-400, 20, 800, 50))
+        pygame.draw.rect(window, (0,255,0), (WIDTH/2-400, 20, 800* (self.health/self.max_health), 50))
     
+    def return_value(self):
+        return self.value    
+
 class Enemy_Charge(Ship):
     def __init__(self, x, y):
         super().__init__(x, y)
@@ -631,16 +685,17 @@ def main():
                 player.health=100
                 enemies = []
                 enemies_charge = []
+                bullets=[]
                 main_menu=True
                 lost=False
                 level=0
-                lives=3
                 lost_count=0
                 player.points=0
                 ending_screen=False
                 pygame.mixer.music.unload
                 pygame.mixer.music.load("assets/bg_song.ogg")
                 pygame.mixer.music.play(-1)
+                multiplier=1
                 
             
 
@@ -653,7 +708,7 @@ def main():
                 pygame.mixer.music.unload
                 pygame.mixer.music.load("assets/lost_theme.mp3")
                 pygame.mixer.music.play(-1)
-            if level==2 and len(enemies)+len(enemies_charge) == 0:
+            if level==3 and len(enemies)+len(enemies_charge) == 0:
                 ending_screen=True
                 pygame.mixer.music.unload
                 pygame.mixer.music.load("assets/win_theme.mp3")
@@ -691,6 +746,11 @@ def main():
                         strint2 = int(levels[level_nr+2][i])
                         strint3 = int(levels[level_nr+1][i])
                         enemy = Enemy_Spread(strint2,strint3)
+                        enemies.append(enemy)
+                    elif strint==4:
+                        strint2 = int(levels[level_nr+2][i])
+                        strint3 = int(levels[level_nr+1][i])
+                        enemy = Boss(strint2,strint3)
                         enemies.append(enemy)
   
 
