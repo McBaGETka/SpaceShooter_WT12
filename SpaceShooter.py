@@ -17,95 +17,106 @@ HEIGHT =  user32.GetSystemMetrics(1)
 pygame.display.set_caption('SpaceShooter')
 WINDOW=pygame.display.set_mode((WIDTH,HEIGHT),pygame.FULLSCREEN)
 mixer.init()
+#resolution variables
+ENEMY_VAR=int(WIDTH*0.039) #75px
+ENEMY_S_VAR=int(WIDTH*0.02) #40ox
+SKIN_SHOW=int(WIDTH*0.182) #350px
+SKIN_SHOW_POS=int(WIDTH*0.13) #250px
+BOSS_X=int(WIDTH*0.26) #500px
+BOSS_Y=int(WIDTH*0.104) #200px
+
+BUTTON_X_1=int(WIDTH*0.156) #300px
+BUTTON_Y_1=int(WIDTH*0.052) #100px
+BUTTON_2=int(WIDTH*0.104) #200px
+
+HP_BOR_X=int(WIDTH*0.158) #300px
+HP_BOR_Y=int(WIDTH*0.028) #50px
+
+HP_POS_X=int(WIDTH*0.052) #100px
+HP_POS_Y=int(HEIGHT*0.138) #150px
+
+GAMEPLAY_BORDER=int(WIDTH*0.234) #450px
+GAMEPLAY_SITE=WIDTH-2*GAMEPLAY_BORDER
 
 #enemy data
-ENEMY_SHIP=pygame.transform.scale(pygame.image.load(os.path.join("assets", "przeciwnik.png")).convert_alpha(),(75,75))
-ENEMY_SHIP_CHARGE=pygame.transform.scale(pygame.image.load(os.path.join("assets", "enemy_charge.png")).convert_alpha(),(75,75))
-ENEMY_SHIP_CHARGE_ANGRY=pygame.transform.scale(pygame.image.load(os.path.join("assets", "enemy_charge_angry.png")).convert_alpha(),(75,75))
-ENEMY_SHIP_SHOTGUN=pygame.transform.scale(pygame.image.load(os.path.join("assets", "enemy_shotgun.png")).convert_alpha(),(75,40))
-BOSS_SHIP=pygame.transform.scale(pygame.image.load(os.path.join("assets", "boss_ship.png")).convert_alpha(),(500,200))
+ENEMY_SHIP=pygame.transform.scale(pygame.image.load(os.path.join("assets", "przeciwnik.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR))
+ENEMY_SHIP_CHARGE=pygame.transform.scale(pygame.image.load(os.path.join("assets", "enemy_charge.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR))
+ENEMY_SHIP_CHARGE_ANGRY=pygame.transform.scale(pygame.image.load(os.path.join("assets", "enemy_charge_angry.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR))
+ENEMY_SHIP_SHOTGUN=pygame.transform.scale(pygame.image.load(os.path.join("assets", "enemy_shotgun.png")).convert_alpha(),(ENEMY_VAR,ENEMY_S_VAR))
+BOSS_SHIP=pygame.transform.scale(pygame.image.load(os.path.join("assets", "boss_ship.png")).convert_alpha(),(BOSS_X,BOSS_Y))
 
 ENEMY_BULLET=pygame.transform.scale(pygame.image.load(os.path.join("assets", "pocisk.png")).convert_alpha(),(8,8))
 ENEMY_BULLET_2=pygame.transform.scale(pygame.image.load(os.path.join("assets", "bullet2.png")).convert_alpha(),(10,10))
 
 
 #player data
-PLAYER_SHIP=pygame.transform.scale(pygame.image.load(os.path.join("assets", "stateczek.png")).convert_alpha(),(75,75))
-PLAYER_SHIP_WHITE=pygame.transform.scale(pygame.image.load(os.path.join("assets", "stateczek_white.png")).convert_alpha(),(75,75))
-PLAYER_SHIP_BLUE=pygame.transform.scale(pygame.image.load(os.path.join("assets", "stateczek_blue.png")).convert_alpha(),(75,75))
-PLAYER_SHIP_YELLOW=pygame.transform.scale(pygame.image.load(os.path.join("assets", "stateczek_yellow.png")).convert_alpha(),(75,75))
+PLAYER_SHIP=pygame.transform.scale(pygame.image.load(os.path.join("assets", "stateczek.png")).convert_alpha(),(SKIN_SHOW,SKIN_SHOW))
+PLAYER_SHIP_WHITE=pygame.transform.scale(pygame.image.load(os.path.join("assets", "stateczek_white.png")).convert_alpha(),(SKIN_SHOW,SKIN_SHOW))
+PLAYER_SHIP_BLUE=pygame.transform.scale(pygame.image.load(os.path.join("assets", "stateczek_blue.png")).convert_alpha(),(SKIN_SHOW,SKIN_SHOW))
+PLAYER_SHIP_YELLOW=pygame.transform.scale(pygame.image.load(os.path.join("assets", "stateczek_yellow.png")).convert_alpha(),(SKIN_SHOW,SKIN_SHOW))
 
 PLAYER_BULLET=pygame.transform.scale(pygame.image.load(os.path.join("assets", "pocisk.png")),(8,8))
 
-#buttons
-#START_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "start_button.png")).convert_alpha(),(300,100))
-#OPTIONS_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "options_button.png")).convert_alpha(),(300,100))
-#RECORDS_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "records_button.png")).convert_alpha(),(300,100))
-#EXIT_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "exit_button.png")).convert_alpha(),(300,100))
-#ARROW_LEFT=pygame.transform.scale(pygame.image.load(os.path.join("assets", "arrow_left.png")).convert_alpha(),(200,200))
-#ARROW_RIGHT=pygame.transform.scale(pygame.image.load(os.path.join("assets", "arrow_right.png")).convert_alpha(),(200,200))
-#SKIN_CHANGE_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "skin_change_button.png")).convert_alpha(),(300,100))
-#BACK_BUTTON=pygame.transform.scale(pygame.image.load(os.path.join("assets", "back_button.png")).convert_alpha(),(200,200))
 
 #animations
-EXPLOSION=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/explosion", "e1.png")).convert_alpha(),(75,75)),
-           pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/explosion", "e2.png")).convert_alpha(),(75,75)),
-           pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/explosion", "e3.png")).convert_alpha(),(75,75)),
-           pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/explosion", "e4.png")).convert_alpha(),(75,75)),
-           pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/explosion", "e5.png")).convert_alpha(),(75,75))]
+EXPLOSION=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/explosion", "e1.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
+           pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/explosion", "e2.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
+           pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/explosion", "e3.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
+           pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/explosion", "e4.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
+           pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/explosion", "e5.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR))]
 
-SHIP1=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1a.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1b.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1c.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1d.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1c.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1b.png")).convert_alpha(),(75,75))]
+SHIP1=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1a.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1b.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1c.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1d.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1c.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1b.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR))]
 
-SHIP2=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2a.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2b.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2c.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2d.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2c.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2b.png")).convert_alpha(),(75,75))]
+SHIP2=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2a.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2b.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2c.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2d.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2c.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/2niebieski", "statek2b.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR))]
 
-SHIP3=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zielony", "statek4a.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zielony", "statek4b.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zielony", "statek4c.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zielony", "statek4d.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zielony", "statek4c.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zielony", "statek4b.png")).convert_alpha(),(75,75))]
+SHIP3=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zielony", "statek4a.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zielony", "statek4b.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zielony", "statek4c.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zielony", "statek4d.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zielony", "statek4c.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/3zielony", "statek4b.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR))]
 
-SHIP4=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zolty", "statek3a.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zolty", "statek3b.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zolty", "statek3c.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zolty", "statek3d.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zolty", "statek3c.png")).convert_alpha(),(75,75)),
-       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zolty", "statek3b.png")).convert_alpha(),(75,75))]
+SHIP4=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zolty", "statek3a.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zolty", "statek3b.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zolty", "statek3c.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zolty", "statek3d.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zolty", "statek3c.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
+       pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/4zolty", "statek3b.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR))]
 
 #button animations
-START_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets", "start_button.png")).convert_alpha(),(300,100)),
-              pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "start_button1.png")).convert_alpha(),(300,100))]
+START_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets", "start_button.png")).convert_alpha(),(BUTTON_X_1,BUTTON_Y_1)),
+              pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "start_button1.png")).convert_alpha(),(BUTTON_X_1,BUTTON_Y_1))]
 
-OPTIONS_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets", "options_button.png")).convert_alpha(),(300,100)),
-                pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "options_button1.png")).convert_alpha(),(300,100))]
+OPTIONS_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets", "options_button.png")).convert_alpha(),(BUTTON_X_1,BUTTON_Y_1)),
+                pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "options_button1.png")).convert_alpha(),(BUTTON_X_1,BUTTON_Y_1))]
 
-RECORDS_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets", "records_button.png")).convert_alpha(),(300,100)),
-                pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "records_button1.png")).convert_alpha(),(300,100))]
+RECORDS_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets", "records_button.png")).convert_alpha(),(BUTTON_X_1,BUTTON_Y_1)),
+                pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "records_button1.png")).convert_alpha(),(BUTTON_X_1,BUTTON_Y_1))]
 
-EXIT_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets", "exit_button.png")).convert_alpha(),(300,100)),
-             pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "exit_button1.png")).convert_alpha(),(300,100))]
+EXIT_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets", "exit_button.png")).convert_alpha(),(BUTTON_X_1,BUTTON_Y_1)),
+             pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "exit_button1.png")).convert_alpha(),(BUTTON_X_1,BUTTON_Y_1))]
 
-ARROW_LEFT=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "arrow_left.png")).convert_alpha(),(200,200)),
-            pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "arrow_left1.png")).convert_alpha(),(200,200))]
+ARROW_LEFT=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "arrow_left.png")).convert_alpha(),(BUTTON_2,BUTTON_2)),
+            pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "arrow_left1.png")).convert_alpha(),(BUTTON_2,BUTTON_2))]
 
-ARROW_RIGHT=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "arrow_right.png")).convert_alpha(),(200,200)),
-             pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "arrow_right1.png")).convert_alpha(),(200,200))]
+ARROW_RIGHT=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "arrow_right.png")).convert_alpha(),(BUTTON_2,BUTTON_2)),
+             pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "arrow_right1.png")).convert_alpha(),(BUTTON_2,BUTTON_2))]
 
-SKIN_CHANGE_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets", "options_button.png")).convert_alpha(),(300,100)),
-                    pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "options_button1.png")).convert_alpha(),(300,100))]
+SKIN_CHANGE_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets", "options_button.png")).convert_alpha(),(BUTTON_X_1,BUTTON_Y_1)),
+                    pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "options_button1.png")).convert_alpha(),(BUTTON_X_1,BUTTON_Y_1))]
 
-BACK_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets", "back_button.png")).convert_alpha(),(200,200)),
-             pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "back_button1.png")).convert_alpha(),(200,200))]
+BACK_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets", "back_button.png")).convert_alpha(),(BUTTON_2,BUTTON_2)),
+             pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/buttons", "back_button1.png")).convert_alpha(),(BUTTON_2,BUTTON_2))]
 
 
 #background
@@ -114,7 +125,7 @@ OPTIONS_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets
 SKIN_CHANGE_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "skin_change_background.png")).convert(),(WIDTH,HEIGHT))
 BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "kosmos1.png")).convert(),(WIDTH,HEIGHT))
 OVERLAY=pygame.transform.scale(pygame.image.load(os.path.join("assets", "overlay.png")).convert_alpha(),(WIDTH,HEIGHT))
-HP_BORDER=pygame.transform.scale(pygame.image.load(os.path.join("assets", "hp_border.png")).convert_alpha(),(300,50))
+HP_BORDER=pygame.transform.scale(pygame.image.load(os.path.join("assets", "hp_border.png")).convert_alpha(),(HP_BOR_X,HP_BOR_Y))
 VICTORY=pygame.transform.scale(pygame.image.load(os.path.join("assets", "victory.png")).convert(),(WIDTH,HEIGHT))
 GAME_OVER=pygame.transform.scale(pygame.image.load(os.path.join("assets", "game_over.png")).convert(),(WIDTH,HEIGHT))
 
@@ -240,7 +251,7 @@ class Ship:
     def shoot(self):
         if self.cooldown_counter == 0:
             pygame.mixer.Sound.play(PLAYER_SHOOT)
-            bullet = Bullet(self.x + 45, self.y, self.bullet_img)
+            bullet = Bullet(self.x +self.ship_img.get_width()/2-5, self.y, self.bullet_img)
             self.bullets.append(bullet)
             self.cooldown_counter = 1
 
@@ -335,8 +346,8 @@ class Player(Ship):
 
 
     def healthbar(self, window):
-        pygame.draw.rect(window, (255,0,0), (100, 150, 300, 50))
-        pygame.draw.rect(window, (0,255,0), (100, 150, 300* (self.health/self.max_health), 50))
+        pygame.draw.rect(window, (255,0,0), (HP_POS_X, HP_POS_Y, 300, 50))
+        pygame.draw.rect(window, (0,255,0), (HP_POS_X, HP_POS_Y, 300* (self.health/self.max_health), 50))
 
 
 class Enemy(Ship):
@@ -369,8 +380,8 @@ class Boss(Ship):
         self.bullet_img =ENEMY_BULLET_2
         self.mask = pygame.mask.from_surface(self.ship_img)
         self.value=100
-        self.health=5000
-        self.max_health=5000
+        self.health=2000
+        self.max_health=2000
         self.value=0
         self.direction_x=0
         self.direction_y=1
@@ -378,11 +389,11 @@ class Boss(Ship):
     def move(self, vel):
         if self.direction_x==0:
             self.x+=vel
-            if self.x + self.get_width()>=WIDTH-500:
+            if self.x + self.get_width()>=WIDTH-GAMEPLAY_BORDER:
                 self.direction_x=1
         if self.direction_x==1:
             self.x-=vel
-            if self.x<=500:
+            if self.x<=GAMEPLAY_BORDER:
                 self.direction_x=0
         if self.direction_y>0:
             self.y+=2
@@ -408,8 +419,8 @@ class Boss(Ship):
         self.healthbar(window)
             
     def healthbar(self, window):
-        pygame.draw.rect(window, (255,0,0), (WIDTH/2-400, 20, 800, 50))
-        pygame.draw.rect(window, (0,255,0), (WIDTH/2-400, 20, 800* (self.health/self.max_health), 50))
+        pygame.draw.rect(window, (255,0,0), (WIDTH/2-GAMEPLAY_SITE/2, 20, GAMEPLAY_SITE, 50))
+        pygame.draw.rect(window, (0,255,0), (WIDTH/2-GAMEPLAY_SITE/2, 20, GAMEPLAY_SITE* (self.health/self.max_health), 50))
     
     def return_value(self):
         return self.value    
@@ -426,9 +437,9 @@ class Enemy_Charge(Ship):
         self.direction = random.randrange(1,11)
         
         if self.x>WIDTH/2:
-            self.x=random.randrange(0,450)
+            self.x=random.randrange(0,GAMEPLAY_BORDER)
         else:
-            self.x=random.randrange(WIDTH-450,WIDTH)
+            self.x=random.randrange(WIDTH-GAMEPLAY_BORDER,WIDTH)
 
     def move(self, vel,obj):
         if obj.x<self.x<obj.x+10:
@@ -441,9 +452,9 @@ class Enemy_Charge(Ship):
                 self.idle=True
                 self.ship_img=ENEMY_SHIP_CHARGE
         else:
-            if self.x<450:
+            if self.x<GAMEPLAY_BORDER:
                 self.direction=6
-            elif self.x>WIDTH-550:
+            elif self.x>WIDTH-GAMEPLAY_BORDER-100:
                 self.direction=1
 
             if self.direction>5:
@@ -497,13 +508,13 @@ def collide(obj1, obj2):
 
 def ship_skin_showcase(x):
     if x==0:
-        WINDOW.blit(pygame.transform.scale(PLAYER_SHIP,(350,350)),(WIDTH/2-175,HEIGHT/2-250))
+        WINDOW.blit(PLAYER_SHIP,(WIDTH/2-SKIN_SHOW/2,HEIGHT/2-SKIN_SHOW_POS))
     elif x==1:
-        WINDOW.blit(pygame.transform.scale(PLAYER_SHIP_BLUE,(350,350)),(WIDTH/2-175,HEIGHT/2-250))
+        WINDOW.blit(PLAYER_SHIP_BLUE,(WIDTH/2-SKIN_SHOW/2,HEIGHT/2-SKIN_SHOW_POS))
     elif x==2:
-        WINDOW.blit(pygame.transform.scale(PLAYER_SHIP_WHITE,(350,350)),(WIDTH/2-175,HEIGHT/2-250))
+        WINDOW.blit(PLAYER_SHIP_WHITE,(WIDTH/2-SKIN_SHOW/2,HEIGHT/2-SKIN_SHOW_POS))
     elif x==3:
-        WINDOW.blit(pygame.transform.scale(PLAYER_SHIP_YELLOW,(350,350)),(WIDTH/2-175,HEIGHT/2-250))
+        WINDOW.blit(PLAYER_SHIP_YELLOW,(WIDTH/2-SKIN_SHOW/2,HEIGHT/2-SKIN_SHOW_POS))
 
 
 def main():
@@ -608,7 +619,7 @@ def main():
         player.anim(ex_count,ship_option)
         player.draw(WINDOW)
 
-        WINDOW.blit(HP_BORDER,(100,150))
+        WINDOW.blit(HP_BORDER,(HP_POS_X,HP_POS_Y))
         pygame.display.update()
 
     def off():
