@@ -300,7 +300,8 @@ class Player(Ship):
                         pygame.mixer.Sound.play(ENEMY_HIT)
                         explosion=Explosion(bullet.x-25,bullet.y-20)
                         expl.append(explosion)
-                        if self.flawless==True:
+                        obj.health-=100
+                        if self.flawless==True and obj.health<=0:
                             multiplier+=0.5
                         else:
                             multiplier=1
@@ -308,12 +309,13 @@ class Player(Ship):
 
 
                         self.points+=obj.return_value()*multiplier  
-                        obj.health-=100
+                        
                         
                         if bullet in self.bullets:
                             self.bullets.remove(bullet)
 
     def get_hit(self,val):
+        global multiplier
         self.flawless=False
         multiplier=1
         self.health -= val
@@ -799,6 +801,7 @@ def main():
                 if collide(enemy_charge,player):
                     enemies_charge.remove(enemy_charge)
                     player.get_hit(15)
+                    
                 if enemy_charge.y + enemy_charge.get_height() > HEIGHT:
                     enemies_charge.remove(enemy_charge)
                     off()
