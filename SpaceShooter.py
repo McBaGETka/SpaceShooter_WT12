@@ -133,6 +133,7 @@ BACK_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets", "ba
 STARTING_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "menu.png")).convert(),(WIDTH,HEIGHT))
 OPTIONS_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "options.png")).convert(),(WIDTH,HEIGHT))
 SKIN_CHANGE_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "skin_change_background.png")).convert(),(WIDTH,HEIGHT))
+TABLE_OF_RECORDS_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "table_of_records_background.png")).convert(),(WIDTH,HEIGHT))
 BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "kosmos1.png")).convert(),(WIDTH,HEIGHT))
 OVERLAY=pygame.transform.scale(pygame.image.load(os.path.join("assets", "overlay.png")).convert_alpha(),(WIDTH,HEIGHT))
 HP_BORDER=pygame.transform.scale(pygame.image.load(os.path.join("assets", "hp_border.png")).convert_alpha(),(HP_BOR_X,HP_BOR_Y))
@@ -786,7 +787,7 @@ def main():
                 ship_skin_showcase(ship_option)
                 player = Player(WIDTH/2-45,650,ship_option)
             elif records==True:
-                WINDOW.blit(BACKGROUND,(0,0))
+                WINDOW.blit(TABLE_OF_RECORDS_BACKGROUND,(0,0))
                 if back_button.draw():
                     records=False
 
