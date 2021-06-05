@@ -45,6 +45,9 @@ ENEMY_SHIP_CHARGE_ANGRY=pygame.transform.scale(pygame.image.load(os.path.join("a
 ENEMY_SHIP_SHOTGUN=pygame.transform.scale(pygame.image.load(os.path.join("assets", "enemy_shotgun.png")).convert_alpha(),(ENEMY_VAR,ENEMY_S_VAR))
 BOSS_SHIP=pygame.transform.scale(pygame.image.load(os.path.join("assets", "boss_ship.png")).convert_alpha(),(BOSS_X,BOSS_Y))
 
+BOSS_MINE_CIRCLE=pygame.transform.scale(pygame.image.load(os.path.join("assets", "mine_circle.png")).convert_alpha(),(HP_POS_X,HP_POS_X))
+
+
 ENEMY_BULLET=pygame.transform.scale(pygame.image.load(os.path.join("assets", "pocisk.png")).convert_alpha(),(8,8))
 ENEMY_BULLET_2=pygame.transform.scale(pygame.image.load(os.path.join("assets", "bullet2.png")).convert_alpha(),(10,10))
 
@@ -64,6 +67,13 @@ EXPLOSION=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animati
            pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/explosion", "e3.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
            pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/explosion", "e4.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
            pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/explosion", "e5.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR))]
+
+BOSS_MINE_READY=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/bomb", "bomb_ready1.png")).convert_alpha(),(HP_POS_X,HP_POS_X)),
+                pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/bomb", "bomb_ready2.png")).convert_alpha(),(HP_POS_X,HP_POS_X)),
+                pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/bomb", "bomb_ready3.png")).convert_alpha(),(HP_POS_X,HP_POS_X)),
+                pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/bomb", "bomb_ready4.png")).convert_alpha(),(HP_POS_X,HP_POS_X)),
+                pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/bomb", "bomb_ready5.png")).convert_alpha(),(HP_POS_X,HP_POS_X)),
+                pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/bomb", "bomb_ready6.png")).convert_alpha(),(HP_POS_X,HP_POS_X)),]
 
 SHIP1=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1a.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
        pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1b.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
@@ -186,6 +196,32 @@ class Explosion:
 
     def return_lifespan(self):
         return self.lifespan
+
+
+class Bomb:
+     def __init__(self,x,y):
+        self.x=x
+        self.y=y
+        self.img =BOSS_MINE_CIRCLE
+        self.mask = pygame.mask.from_surface(BOSS_MINE_READY[0])
+        self.lifespan=0
+        self.anim=0
+
+     def draw(self):
+        if self.lifespan<150:
+            WINDOW.blit(self.img, (self.x, self.y))
+        else:
+            self.anim+=1
+            WINDOW.blit(BOSS_MINE_READY[self.anim//20], (self.x, self.y))
+
+        self.lifespan+=1
+
+     def collision(self, obj):
+        return collide(self, obj)
+
+     def return_lifespan(self):
+        return self.lifespan
+
 
 
 class Bullet:
@@ -389,7 +425,7 @@ class Boss(Ship):
         self.direction_x=0
         self.direction_y=1
         self.attack_dur=0
-        self.attack_pattern=0
+        self.attack_pattern=2
 
     def move(self, vel):
         if self.direction_x==0:
@@ -413,7 +449,7 @@ class Boss(Ship):
 
         
 
-    def shoot(self,objs):
+    def shoot(self,objs,bombs):
         if self.attack_pattern==0:
             if self.cooldown_counter==0:
                 bullet = Bullet(self.x+int(self.get_width()*0.14), self.y+80, self.bullet_img)
@@ -469,10 +505,32 @@ class Boss(Ship):
                 objs.append(bulletsll)
                 self.cooldown_counter=1
 
+        
+
+        elif self.attack_pattern==2:
+            bomb=Bomb(random.randrange(GAMEPLAY_BORDER+100,WIDTH-GAMEPLAY_BORDER-100),random.randrange(400,HEIGHT-100))
+            bomb2=Bomb(random.randrange(GAMEPLAY_BORDER+100,WIDTH-GAMEPLAY_BORDER-100),random.randrange(400,HEIGHT-100))
+            bomb3=Bomb(random.randrange(GAMEPLAY_BORDER+100,WIDTH-GAMEPLAY_BORDER-100),random.randrange(400,HEIGHT-100))
+            bomb4=Bomb(random.randrange(GAMEPLAY_BORDER+100,WIDTH-GAMEPLAY_BORDER-100),random.randrange(400,HEIGHT-100))
+            bomb5=Bomb(random.randrange(GAMEPLAY_BORDER+100,WIDTH-GAMEPLAY_BORDER-100),random.randrange(400,HEIGHT-100))
+            bomb6=Bomb(random.randrange(GAMEPLAY_BORDER+100,WIDTH-GAMEPLAY_BORDER-100),random.randrange(400,HEIGHT-100))
+            bombs.append(bomb)
+            bombs.append(bomb2)
+            bombs.append(bomb3)
+            bombs.append(bomb4)
+            bombs.append(bomb5)
+            bombs.append(bomb6)
+            print("tworze bombe")
+            self.attack_pattern=-1
+
+        elif self.attack_pattern==-1: 
+            print(self.attack_dur)
+
+
         self.attack_dur+=1
         if self.attack_dur>=240:
             self.attack_dur=0
-            self.attack_pattern=random.randrange(0,2)
+            self.attack_pattern=random.randrange(0,3)
 
         
 
@@ -611,6 +669,7 @@ def main():
 
     all_bullets=[]
     explosions=[]
+    all_bombs=[]
 
     main_font = pygame.font.SysFont("agency_fb", 80)
     second_font = pygame.font.SysFont("agency_fb", 120)
@@ -667,6 +726,16 @@ def main():
             lazy_timer=0
         else:
             lazy_timer+=1
+
+        for bomb in all_bombs:
+            bomb.draw()
+            if bomb.return_lifespan()>100:
+                if bomb.collision(player):
+                    player.health-10
+                    all_bombs.remove(bomb)
+            if bomb.return_lifespan()>250:
+                all_bombs.remove(bomb)
+
 
         
         score_label = main_font.render(f"{int(player.get_points())}", 1, (255,174,0))
@@ -830,6 +899,9 @@ def main():
                         strint3 = int(levels[level_nr+1][i])
                         enemy = Boss(strint2,strint3)
                         enemies.append(enemy)
+                        pygame.mixer.music.unload
+                        pygame.mixer.music.load("assets/boss_music.mp3")
+                        pygame.mixer.music.play(-1)
   
 
             if keys[pygame.K_a] and player.x - player_vel > 520:
@@ -846,7 +918,10 @@ def main():
                 run=False
 
             for enemy in enemies[:]:
-                enemy.shoot(all_bullets)
+                if level==3:
+                    enemy.shoot(all_bullets,all_bombs)
+                else:
+                    enemy.shoot(all_bullets)
                 enemy.cooldown()
                 enemy.move(enemy_vel)
                 if enemy.health<=0:
