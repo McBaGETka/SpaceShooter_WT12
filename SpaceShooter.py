@@ -208,11 +208,11 @@ class Bomb:
         self.anim=0
 
      def draw(self):
-        if self.lifespan<150:
+        if self.lifespan<100:
             WINDOW.blit(self.img, (self.x, self.y))
         else:
             self.anim+=1
-            WINDOW.blit(BOSS_MINE_READY[self.anim//20], (self.x, self.y))
+            WINDOW.blit(BOSS_MINE_READY[self.anim//10], (self.x, self.y))
 
         self.lifespan+=1
 
@@ -418,34 +418,52 @@ class Boss(Ship):
         self.bullet_img =ENEMY_BULLET
         self.bullet_img_2=ENEMY_BULLET_2
         self.mask = pygame.mask.from_surface(self.ship_img)
-        self.value=100
-        self.health=2000
-        self.max_health=2000
+        self.health=10000
+        self.max_health=10000
         self.value=0
         self.direction_x=0
         self.direction_y=1
         self.attack_dur=0
         self.attack_pattern=2
+        self.idle=False
+        self.charge=False
 
     def move(self, vel):
-        if self.direction_x==0:
-            self.x+=3
-            if self.x + self.get_width()>=WIDTH-GAMEPLAY_BORDER:
-                self.direction_x=1
-        if self.direction_x==1:
-            self.x-=3
-            if self.x<=GAMEPLAY_BORDER:
-                self.direction_x=0
-        if self.direction_y>0:
-            self.y+=1
-            self.direction_y+=1
-            if self.direction_y>=100:
-                self.direction_y=-1
-        if self.direction_y<0:
-            self.y-=1
-            self.direction_y-=1
-            if self.direction_y<=-100:
-                self.direction_y=1
+        if self.charge==True:
+            if self.idle==False:
+                if self.attack_dur<30:
+                    self.y-=1;
+                else:
+                    self.y+=vel*5
+            
+                if self.y>HEIGHT+200:
+                    self.y=-BOSS_Y
+                    self.idle=True
+            else:
+                self.y+=vel
+                if self.y>=100:
+                    self.charge=False
+
+        else:
+            if self.direction_x==0:
+                self.x+=3
+                if self.x + self.get_width()>=WIDTH-GAMEPLAY_BORDER:
+                    self.direction_x=1
+            if self.direction_x==1:
+                self.x-=3
+                if self.x<=GAMEPLAY_BORDER:
+                    self.direction_x=0
+            if self.direction_y>0:
+                self.y+=1
+                self.direction_y+=1
+                if self.direction_y>=100:
+                    self.direction_y=-1
+            if self.direction_y<0:
+                self.y-=1
+                self.direction_y-=1
+                if self.direction_y<=-100:
+                    self.direction_y=1
+
 
         
 
@@ -520,22 +538,27 @@ class Boss(Ship):
             bombs.append(bomb4)
             bombs.append(bomb5)
             bombs.append(bomb6)
-            print("tworze bombe")
+            self.attack_pattern=-1
+            self.attack_dur+100
+
+        
+        elif self.attack_pattern==3:
+            self.charge=True;
+            self.idle=False
             self.attack_pattern=-1
 
-        elif self.attack_pattern==-1: 
-            print(self.attack_dur)
 
 
         self.attack_dur+=1
         if self.attack_dur>=240:
             self.attack_dur=0
-            self.attack_pattern=random.randrange(0,3)
+            self.attack_pattern=random.randrange(0,4)
 
         
 
    
-           
+    def collision(self, obj):
+        return collide(self, obj)       
             
     def draw(self, window):
         super().draw(window)
@@ -721,7 +744,7 @@ def main():
             else:
                 explosion.anim()
 
-        if lazy_timer>60:
+        if lazy_timer>60 and level!=3:
             player.points-=10
             lazy_timer=0
         else:
@@ -731,9 +754,8 @@ def main():
             bomb.draw()
             if bomb.return_lifespan()>100:
                 if bomb.collision(player):
-                    player.health-10
-                    all_bombs.remove(bomb)
-            if bomb.return_lifespan()>250:
+                    player.get_hit(1)                 
+            if bomb.return_lifespan()>151:
                 all_bombs.remove(bomb)
 
 
@@ -920,13 +942,15 @@ def main():
             for enemy in enemies[:]:
                 if level==3:
                     enemy.shoot(all_bullets,all_bombs)
+                    if collide(enemy,player):
+                       player.get_hit(3)
                 else:
                     enemy.shoot(all_bullets)
-                enemy.cooldown()
                 enemy.move(enemy_vel)
+                enemy.cooldown()
                 if enemy.health<=0:
                    enemies.remove(enemy)
-                if enemy.y + enemy.get_height() > HEIGHT:
+                if enemy.y + enemy.get_height() > HEIGHT and level!=3:
                     enemies.remove(enemy)
                     off()
 
