@@ -884,6 +884,7 @@ def main():
                 pygame.mixer.music.play(-1)
             if level==3 and len(enemies)+len(enemies_charge) == 0:
                 ending_screen=True
+                player.points+=2000*multiplier
                 pygame.mixer.music.unload
                 pygame.mixer.music.load("assets/win_theme.mp3")
                 pygame.mixer.music.play(-1)
