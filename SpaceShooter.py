@@ -379,7 +379,8 @@ class Boss(Ship):
     def __init__(self, x, y):
         super().__init__(x, y)
         self.ship_img=BOSS_SHIP
-        self.bullet_img =ENEMY_BULLET_2
+        self.bullet_img =ENEMY_BULLET
+        self.bullet_img_2=ENEMY_BULLET_2
         self.mask = pygame.mask.from_surface(self.ship_img)
         self.value=100
         self.health=2000
@@ -387,35 +388,97 @@ class Boss(Ship):
         self.value=0
         self.direction_x=0
         self.direction_y=1
+        self.attack_dur=0
+        self.attack_pattern=0
 
     def move(self, vel):
         if self.direction_x==0:
-            self.x+=vel
+            self.x+=3
             if self.x + self.get_width()>=WIDTH-GAMEPLAY_BORDER:
                 self.direction_x=1
         if self.direction_x==1:
-            self.x-=vel
+            self.x-=3
             if self.x<=GAMEPLAY_BORDER:
                 self.direction_x=0
         if self.direction_y>0:
-            self.y+=2
+            self.y+=1
             self.direction_y+=1
-            if self.direction_y>=50:
+            if self.direction_y>=100:
                 self.direction_y=-1
         if self.direction_y<0:
-            self.y-=2
+            self.y-=1
             self.direction_y-=1
-            if self.direction_y<=-51:
+            if self.direction_y<=-100:
                 self.direction_y=1
 
         
 
     def shoot(self,objs):
-        if self.cooldown_counter==0 and random.randrange(60)==1:
-            bullet = Bullet(self.x+37, self.y+80, self.bullet_img)
-            objs.append(bullet)
-            self.cooldown_counter=1
+        if self.attack_pattern==0:
+            if self.cooldown_counter==0:
+                bullet = Bullet(self.x+int(self.get_width()*0.14), self.y+80, self.bullet_img)
+                bullet2 = Bullet(self.x+int(self.get_width()*0.28), self.y+80, self.bullet_img)
+                bullet3 = Bullet(self.x+int(self.get_width()*0.42), self.y+80, self.bullet_img)
+                bullet4 = Bullet(self.x+int(self.get_width()/2), self.y+80, self.bullet_img)
+                bullet5 = Bullet(self.x+int(self.get_width()*0.64), self.y+80, self.bullet_img)
+                bullet6 = Bullet(self.x+int(self.get_width()*0.78), self.y+80, self.bullet_img)
+                bullet7 = Bullet(self.x+int(self.get_width()*0.92), self.y+80, self.bullet_img)
+                objs.append(bullet)
+                objs.append(bullet2)
+                objs.append(bullet3)
+                objs.append(bullet4)
+                objs.append(bullet5)
+                objs.append(bullet6)
+                objs.append(bullet7)
+                self.cooldown_counter=1
 
+
+        elif self.attack_pattern==1:
+            if self.cooldown_counter==0:
+                bullet = Bullet(self.x+40, self.y+50,  self.bullet_img_2)
+                bulletsrs = Bullet_SRS(self.x+40, self.y+50,  self.bullet_img_2)
+                bulletsls = Bullet_SLS(self.x+40, self.y+50,  self.bullet_img_2)
+                bulletsrl = Bullet_SRL(self.x+40, self.y+50,  self.bullet_img_2)
+                bulletsll = Bullet_SLL(self.x+40, self.y+50,  self.bullet_img_2)
+                objs.append(bullet)
+                objs.append(bulletsrs)
+                objs.append(bulletsls)
+                objs.append(bulletsrl)
+                objs.append(bulletsll)
+
+                bullet = Bullet(self.x+37, self.y+50,  self.bullet_img_2)
+                bulletsrs = Bullet_SRS(self.x+self.get_width()/2, self.y+50,  self.bullet_img_2)
+                bulletsls = Bullet_SLS(self.x+self.get_width()/2, self.y+50,  self.bullet_img_2)
+                bulletsrl = Bullet_SRL(self.x+self.get_width()/2, self.y+50,  self.bullet_img_2)
+                bulletsll = Bullet_SLL(self.x+self.get_width()/2, self.y+50,  self.bullet_img_2)
+                objs.append(bullet)
+                objs.append(bulletsrs)
+                objs.append(bulletsls)
+                objs.append(bulletsrl)
+                objs.append(bulletsll)
+
+                bullet = Bullet(self.x+37, self.y+50,  self.bullet_img_2)
+                bulletsrs = Bullet_SRS(self.x+self.get_width()-40, self.y+50,  self.bullet_img_2)
+                bulletsls = Bullet_SLS(self.x+self.get_width()-40, self.y+50,  self.bullet_img_2)
+                bulletsrl = Bullet_SRL(self.x+self.get_width()-40, self.y+50,  self.bullet_img_2)
+                bulletsll = Bullet_SLL(self.x+self.get_width()-40, self.y+50,  self.bullet_img_2)
+                objs.append(bullet)
+                objs.append(bulletsrs)
+                objs.append(bulletsls)
+                objs.append(bulletsrl)
+                objs.append(bulletsll)
+                self.cooldown_counter=1
+
+        self.attack_dur+=1
+        if self.attack_dur>=240:
+            self.attack_dur=0
+            self.attack_pattern=random.randrange(0,2)
+
+        
+
+   
+           
+            
     def draw(self, window):
         super().draw(window)
         self.healthbar(window)
