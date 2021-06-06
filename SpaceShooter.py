@@ -965,6 +965,9 @@ def main():
             if keys[pygame.K_ESCAPE]:
                 run=False
 
+
+            player.move_bullet(-10, enemies,explosions)
+            player.move_bullet(0, enemies_charge,explosions)
             for enemy in enemies[:]:
                 if level==3:
                     enemy.shoot(all_bullets,all_bombs)
@@ -980,8 +983,7 @@ def main():
                     enemies.remove(enemy)
                     off()
 
-            player.move_bullet(-10, enemies,explosions)
-            player.move_bullet(0, enemies_charge,explosions)
+            
 
             for enemy_charge in enemies_charge[:]:
                 enemy_charge.move(enemy_vel,player)
