@@ -3,6 +3,8 @@ import os
 import time
 import ctypes
 import random
+import datetime
+
 pygame.font.init()
 
 from pygame import mixer
@@ -678,7 +680,6 @@ def ship_skin_showcase(x):
     elif x==3:
         WINDOW.blit(PLAYER_SHIP_YELLOW,(WIDTH/2-SKIN_SHOW/2,HEIGHT/2-SKIN_SHOW_POS))
 
-
 def main():
     run = True
     FPS = 60
@@ -700,13 +701,18 @@ def main():
     with open("levels.txt") as level_list:
         levels = [line.split() for line in level_list]
 
+    records = open("plik.txt", "a+")
+
+
+
+
     global ex_count
     ex_count=0
     global lazy_timer
     lazy_timer=0
     global multiplier
     multiplier=1
-
+    
     all_bullets=[]
     explosions=[]
     all_bombs=[]
@@ -913,6 +919,9 @@ def main():
                     all_bullets.remove(bullet)
                 for explosion in explosions[:]:
                     explosions.remove(explosion)
+                print("dziala")
+                records.write(f"{int(player.get_points())} ")
+                records.write(str(datetime.date.today()))
                 
 
             elif len(enemies)+len(enemies_charge) == 0:
@@ -1013,8 +1022,8 @@ def main():
         
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                run=False
-            
+                records.close()
+                run=False           
 main()
 
 
