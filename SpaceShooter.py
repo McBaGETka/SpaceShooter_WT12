@@ -22,8 +22,8 @@ ENEMY_VAR=int(WIDTH*0.039) #75px
 ENEMY_S_VAR=int(WIDTH*0.02) #40ox
 SKIN_SHOW=int(WIDTH*0.182) #350px
 SKIN_SHOW_POS=int(WIDTH*0.13) #250px
-BOSS_X=int(WIDTH*0.26) #500px
-BOSS_Y=int(WIDTH*0.104) #200px
+BOSS_X=int(WIDTH*0.2) #500px
+BOSS_Y=int(WIDTH*0.106) #250px
 
 BUTTON_X_1=int(WIDTH*0.156) #300px
 BUTTON_Y_1=int(WIDTH*0.052) #100px
@@ -44,8 +44,9 @@ ENEMY_SHIP_CHARGE=pygame.transform.scale(pygame.image.load(os.path.join("assets"
 ENEMY_SHIP_CHARGE_ANGRY=pygame.transform.scale(pygame.image.load(os.path.join("assets", "enemy_charge_angry.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR))
 ENEMY_SHIP_SHOTGUN=pygame.transform.scale(pygame.image.load(os.path.join("assets", "enemy_shotgun.png")).convert_alpha(),(ENEMY_VAR,ENEMY_S_VAR))
 BOSS_SHIP=pygame.transform.scale(pygame.image.load(os.path.join("assets", "boss_ship.png")).convert_alpha(),(BOSS_X,BOSS_Y))
+BOSS_SHIP_CHARGE=pygame.transform.scale(pygame.image.load(os.path.join("assets", "boss_ship_charge.png")).convert_alpha(),(BOSS_X,BOSS_Y))
 
-BOSS_MINE_CIRCLE=pygame.transform.scale(pygame.image.load(os.path.join("assets", "mine_circle.png")).convert_alpha(),(HP_POS_X,HP_POS_X))
+BOSS_MINE_CIRCLE=pygame.transform.scale(pygame.image.load(os.path.join("assets", "mine_circle.png")).convert_alpha(),(HP_POS_Y,HP_POS_Y))
 
 
 ENEMY_BULLET=pygame.transform.scale(pygame.image.load(os.path.join("assets", "pocisk.png")).convert_alpha(),(8,8))
@@ -68,12 +69,12 @@ EXPLOSION=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animati
            pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/explosion", "e4.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
            pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/explosion", "e5.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR))]
 
-BOSS_MINE_READY=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/bomb", "bomb_ready1.png")).convert_alpha(),(HP_POS_X,HP_POS_X)),
-                pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/bomb", "bomb_ready2.png")).convert_alpha(),(HP_POS_X,HP_POS_X)),
-                pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/bomb", "bomb_ready3.png")).convert_alpha(),(HP_POS_X,HP_POS_X)),
-                pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/bomb", "bomb_ready4.png")).convert_alpha(),(HP_POS_X,HP_POS_X)),
-                pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/bomb", "bomb_ready5.png")).convert_alpha(),(HP_POS_X,HP_POS_X)),
-                pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/bomb", "bomb_ready6.png")).convert_alpha(),(HP_POS_X,HP_POS_X)),]
+BOSS_MINE_READY=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/bomb", "bomb_ready1.png")).convert_alpha(),(HP_POS_Y,HP_POS_Y)),
+                pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/bomb", "bomb_ready2.png")).convert_alpha(),(HP_POS_Y,HP_POS_Y)),
+                pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/bomb", "bomb_ready3.png")).convert_alpha(),(HP_POS_Y,HP_POS_Y)),
+                pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/bomb", "bomb_ready4.png")).convert_alpha(),(HP_POS_Y,HP_POS_Y)),
+                pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/bomb", "bomb_ready5.png")).convert_alpha(),(HP_POS_Y,HP_POS_Y)),
+                pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/bomb", "bomb_ready6.png")).convert_alpha(),(HP_POS_Y,HP_POS_Y)),]
 
 SHIP1=[pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1a.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
        pygame.transform.scale(pygame.image.load(os.path.join("assets/animations/ship/1podstawowy", "statek1b.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR)),
@@ -419,6 +420,7 @@ class Boss(Ship):
     def __init__(self, x, y):
         super().__init__(x, y)
         self.ship_img=BOSS_SHIP
+        self.ship_img_charge=BOSS_SHIP_CHARGE
         self.bullet_img =ENEMY_BULLET
         self.bullet_img_2=ENEMY_BULLET_2
         self.mask = pygame.mask.from_surface(self.ship_img)
@@ -571,7 +573,11 @@ class Boss(Ship):
         return collide(self, obj)       
             
     def draw(self, window):
-        super().draw(window)
+        if self.charge==True and self.attack_dur>30 and self.idle==False:
+            window.blit(self.ship_img_charge, (self.x,self.y))
+
+        else:
+            window.blit(self.ship_img, (self.x,self.y))
         self.healthbar(window)
             
     def healthbar(self, window):
