@@ -131,7 +131,6 @@ BACK_BUTTON=[pygame.transform.scale(pygame.image.load(os.path.join("assets", "ba
 
 #background
 STARTING_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "menu.png")).convert(),(WIDTH,HEIGHT))
-OPTIONS_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "options.png")).convert(),(WIDTH,HEIGHT))
 SKIN_CHANGE_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "skin_change_background.png")).convert(),(WIDTH,HEIGHT))
 TABLE_OF_RECORDS_BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "table_of_records_background.png")).convert(),(WIDTH,HEIGHT))
 BACKGROUND=pygame.transform.scale(pygame.image.load(os.path.join("assets", "kosmos1.png")).convert(),(WIDTH,HEIGHT))
@@ -150,6 +149,11 @@ CLICK_SOUND=pygame.mixer.Sound("assets/click.wav")
 CLICK_SOUND.set_volume(0.05)
 ENEMY_HIT=pygame.mixer.Sound("assets/enemy_hit.mp3")
 ENEMY_HIT.set_volume(0.03)
+
+BOSS_CHARGE=pygame.mixer.Sound("assets/boss_charge.wav")
+BOSS_CHARGE.set_volume(0.15)
+BOSS_BOMB=pygame.mixer.Sound("assets/bomb.wav")
+BOSS_BOMB.set_volume(0.1)
 
 
 class Button():
@@ -341,7 +345,6 @@ class Player(Ship):
                         if self.flawless==True and obj.health<=0:
                             multiplier+=0.5
                         else:
-                            multiplier=1
                             self.flawless=True
 
 
@@ -419,8 +422,8 @@ class Boss(Ship):
         self.bullet_img =ENEMY_BULLET
         self.bullet_img_2=ENEMY_BULLET_2
         self.mask = pygame.mask.from_surface(self.ship_img)
-        self.health=10000
-        self.max_health=10000
+        self.health=7000
+        self.max_health=7000
         self.value=0
         self.direction_x=0
         self.direction_y=1
@@ -543,6 +546,7 @@ class Boss(Ship):
             bombs.append(bomb6)
             bombs.append(bomb7)
             bombs.append(bomb8)
+            pygame.mixer.Sound.play(BOSS_BOMB)
             self.attack_pattern=-1
             self.attack_dur+100
 
@@ -550,6 +554,7 @@ class Boss(Ship):
         elif self.attack_pattern==3:
             self.charge=True;
             self.idle=False
+            pygame.mixer.Sound.play(BOSS_CHARGE)
             self.attack_pattern=-1
 
 
@@ -701,6 +706,7 @@ def main():
 
     main_font = pygame.font.SysFont("agency_fb", 80)
     second_font = pygame.font.SysFont("agency_fb", 120)
+    third_font = pygame.font.SysFont("agency_fb", 70)
     record_font = pygame.font.SysFont("agency_fb", 100)
 
     player = Player(WIDTH/2-45,650,ship_option)
@@ -842,15 +848,17 @@ def main():
             if lost==True:
                 WINDOW.blit(GAME_OVER,(0,0))
                 score_label = second_font.render(f"{int(player.get_points())}", 1, (255,21,0))
-                
+                restart=third_font.render("Press R to restart", 1, (255,21,0))
                                
             else:
                 WINDOW.blit(VICTORY,(0,0))
                 score_label = second_font.render(f"{int(player.get_points())}", 1, (0,234,255))
+                restart=third_font.render("Press R to restart", 1, (0,234,255))
                 
                
               
             WINDOW.blit(score_label, (WIDTH/2-score_label.get_rect().width/2,450))
+            WINDOW.blit(restart, (WIDTH/2-restart.get_rect().width/2,650))
             pygame.display.update()
             if keys[pygame.K_e]:
                 run=False
@@ -902,8 +910,7 @@ def main():
 
             elif len(enemies)+len(enemies_charge) == 0:
                 level += 1
-                level_version = random.randrange(0,2)
-                print(level_version)
+                level_version = random.randrange(0,2)          
                 level_nr = (level-1)*6+level_version*3
                 for i in range(len(levels[level_nr])):
                     strint = int(levels[level_nr][i])
@@ -960,15 +967,16 @@ def main():
                     enemies.remove(enemy)
                     off()
 
-
+            player.move_bullet(-10, enemies,explosions)
+            player.move_bullet(0, enemies_charge,explosions)
 
             for enemy_charge in enemies_charge[:]:
                 enemy_charge.move(enemy_vel,player)
                 if enemy_charge.health<=0:
                     enemies_charge.remove(enemy_charge)
                 if collide(enemy_charge,player):
-                    enemies_charge.remove(enemy_charge)
                     player.get_hit(15)
+                    enemies_charge.remove(enemy_charge)
                     
                 if enemy_charge.y + enemy_charge.get_height() > HEIGHT:
                     enemies_charge.remove(enemy_charge)
@@ -981,13 +989,8 @@ def main():
                 elif bullet.collision(player):
                     player.get_hit(10)
                     all_bullets.remove(bullet)
-                
+                        
         
-        
-        
-        
-        player.move_bullet(-10, enemies,explosions)
-        player.move_bullet(0, enemies_charge,explosions)# to juz nie jest main game loop
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run=False
