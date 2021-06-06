@@ -949,6 +949,11 @@ def main():
                         tempfloat = float(levels[level_nr+1][i])
                         strint3 = int(tempfloat*HEIGHT)
                         enemy = Boss(strint2,strint3)
+                        pygame.mixer.music.unload
+                        pygame.mixer.music.load("assets/boss_music.mp3")
+                        pygame.mixer.music.play(-1)
+
+
                         enemies.append(enemy)
   
 
