@@ -690,6 +690,7 @@ def main():
     strint = 0
     strint2 = 0
     string3 = 0
+    tempfloat = 0.0
     with open("levels.txt") as level_list:
         levels = [line.split() for line in level_list]
 
@@ -910,33 +911,39 @@ def main():
 
             elif len(enemies)+len(enemies_charge) == 0:
                 level += 1
-                level_version = random.randrange(0,2)          
+                level_version = random.randrange(0,2)
+                print(level_version)
                 level_nr = (level-1)*6+level_version*3
                 for i in range(len(levels[level_nr])):
                     strint = int(levels[level_nr][i])
                     if strint==1:
-                        strint2 = int(levels[level_nr+2][i])
-                        strint3 = int(levels[level_nr+1][i])
+                        tempfloat = float(levels[level_nr+2][i])
+                        strint2 = int(tempfloat*WIDTH)
+                        tempfloat = float(levels[level_nr+1][i])
+                        strint3 = int(tempfloat*HEIGHT)
                         enemy = Enemy(strint2,strint3)
                         enemies.append(enemy)
                     elif strint==2:
-                        strint2 = int(levels[level_nr+2][i])
-                        strint3 = int(levels[level_nr+1][i])
+                        tempfloat = float(levels[level_nr+2][i])
+                        strint2 = int(tempfloat*WIDTH)
+                        tempfloat = float(levels[level_nr+1][i])
+                        strint3 = int(tempfloat*HEIGHT)
                         enemy_charge = Enemy_Charge(strint2,strint3)
                         enemies_charge.append(enemy_charge)
                     elif strint==3:
-                        strint2 = int(levels[level_nr+2][i])
-                        strint3 = int(levels[level_nr+1][i])
+                        tempfloat = float(levels[level_nr+2][i])
+                        strint2 = int(tempfloat*WIDTH)
+                        tempfloat = float(levels[level_nr+1][i])
+                        strint3 = int(tempfloat*HEIGHT)
                         enemy = Enemy_Spread(strint2,strint3)
                         enemies.append(enemy)
                     elif strint==4:
-                        strint2 = int(levels[level_nr+2][i])
-                        strint3 = int(levels[level_nr+1][i])
+                        tempfloat = float(levels[level_nr+2][i])
+                        strint2 = int(tempfloat*WIDTH)
+                        tempfloat = float(levels[level_nr+1][i])
+                        strint3 = int(tempfloat*HEIGHT)
                         enemy = Boss(strint2,strint3)
                         enemies.append(enemy)
-                        pygame.mixer.music.unload
-                        pygame.mixer.music.load("assets/boss_music.mp3")
-                        pygame.mixer.music.play(-1)
   
 
             if keys[pygame.K_a] and player.x - player_vel > 520:
