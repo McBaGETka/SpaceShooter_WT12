@@ -702,6 +702,10 @@ def main():
         levels = [line.split() for line in level_list]
 
     records = open("plik.txt", "a+")
+    records.seek(0,0)
+    records_list = [line.split() for line in records]
+    records_list = sorted(records_list, key=lambda x: int(x[0]), reverse=True)
+    print(records_list)
 
 
 
@@ -847,7 +851,11 @@ def main():
                 if option_button.draw():
                     options=True
                 if records_button.draw():
+                    records.seek(0,0)
+                    records_list = [line.split() for line in records]
+                    records_list = sorted(records_list, key=lambda x: int(x[0]), reverse=True)
                     records=True
+                    print(records_list)
                 if exit_button.draw():
                     run = False
             
@@ -919,9 +927,9 @@ def main():
                     all_bullets.remove(bullet)
                 for explosion in explosions[:]:
                     explosions.remove(explosion)
-                print("dziala")
+                records.write(f"\n")
                 records.write(f"{int(player.get_points())} ")
-                records.write(str(datetime.date.today()))
+                records.write(f"{str(datetime.date.today())}")
                 
 
             elif len(enemies)+len(enemies_charge) == 0:
