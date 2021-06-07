@@ -680,6 +680,18 @@ def ship_skin_showcase(x):
     elif x==3:
         WINDOW.blit(PLAYER_SHIP_YELLOW,(WIDTH/2-SKIN_SHOW/2,HEIGHT/2-SKIN_SHOW_POS))
 
+def records_showcase(tab,window):
+    showcase_font = pygame.font.SysFont("agency_fb", 50)
+    i=0
+    while i<=9:
+        if i<len(tab):
+            score1 = showcase_font.render(f"{i+1}       {tab[i][1]}     {tab[i][0]}", 1, (255,174,0))
+        else:
+            score1 = showcase_font.render(f"{i+1}       ----------     ----------", 1, (255,174,0))
+        i+=1
+        window.blit(score1, (WIDTH/2-300,200+60*i))
+
+
 def main():
     run = True
     FPS = 60
@@ -701,11 +713,10 @@ def main():
     with open("levels.txt") as level_list:
         levels = [line.split() for line in level_list]
 
-    records = open("plik.txt", "a+")
-    records.seek(0,0)
-    records_list = [line.split() for line in records]
+    records_file = open("plik.txt", "a+")
+    records_file.seek(0,0)
+    records_list = [line.split() for line in records_file]
     records_list = sorted(records_list, key=lambda x: int(x[0]), reverse=True)
-    print(records_list)
 
 
 
@@ -837,6 +848,7 @@ def main():
                 player = Player(WIDTH/2-45,650,ship_option)
             elif records==True:
                 WINDOW.blit(TABLE_OF_RECORDS_BACKGROUND,(0,0))
+                records_showcase(records_list,WINDOW)
                 if back_button.draw():
                     records=False
 
@@ -851,11 +863,10 @@ def main():
                 if option_button.draw():
                     options=True
                 if records_button.draw():
-                    records.seek(0,0)
-                    records_list = [line.split() for line in records]
+                    records_file.seek(0,0)
+                    records_list = [line.split() for line in records_file]
                     records_list = sorted(records_list, key=lambda x: int(x[0]), reverse=True)
                     records=True
-                    print(records_list)
                 if exit_button.draw():
                     run = False
             
@@ -927,15 +938,14 @@ def main():
                     all_bullets.remove(bullet)
                 for explosion in explosions[:]:
                     explosions.remove(explosion)
-                records.write(f"\n")
-                records.write(f"{int(player.get_points())} ")
-                records.write(f"{str(datetime.date.today())}")
+                records_file.write(f"\n")
+                records_file.write(f"{int(player.get_points())} ")
+                records_file.write(f"{str(datetime.date.today())}")
                 
 
             elif len(enemies)+len(enemies_charge) == 0:
                 level += 1
                 level_version = random.randrange(0,2)
-                print(level_version)
                 level_nr = (level-1)*6+level_version*3
                 for i in range(len(levels[level_nr])):
                     strint = int(levels[level_nr][i])
