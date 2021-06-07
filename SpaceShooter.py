@@ -681,15 +681,20 @@ def ship_skin_showcase(x):
         WINDOW.blit(PLAYER_SHIP_YELLOW,(WIDTH/2-SKIN_SHOW/2,HEIGHT/2-SKIN_SHOW_POS))
 
 def records_showcase(tab,window):
-    showcase_font = pygame.font.SysFont("agency_fb", 50)
+    showcase_font = pygame.font.SysFont("agency_fb", 60)
     i=0
     while i<=9:
+        number = showcase_font.render(f"{i+1}", 1, (255,174,0))
         if i<len(tab):
-            score1 = showcase_font.render(f"{i+1}       {tab[i][1]}     {tab[i][0]}", 1, (255,174,0))
+            date =showcase_font.render(f"{tab[i][1]}", 1, (255,174,0))
+            score=showcase_font.render(f"{tab[i][0]}", 1, (255,174,0))
         else:
-            score1 = showcase_font.render(f"{i+1}       ----------     ----------", 1, (255,174,0))
+            date =showcase_font.render("--------", 1, (255,174,0))
+            score=showcase_font.render("--------", 1, (255,174,0))
+        window.blit(number, (WIDTH/2-270-number.get_rect().width/2,300+65*i))
+        window.blit(date, (WIDTH/2+30-date.get_rect().width/2,300+65*i))
+        window.blit(score, (WIDTH/2+330-score.get_rect().width/2,300+65*i))
         i+=1
-        window.blit(score1, (WIDTH/2-300,200+60*i))
 
 
 def main():
@@ -864,6 +869,7 @@ def main():
                     options=True
                 if records_button.draw():
                     records_file.seek(0,0)
+                    del records_list
                     records_list = [line.split() for line in records_file]
                     records_list = sorted(records_list, key=lambda x: int(x[0]), reverse=True)
                     records=True
@@ -938,8 +944,7 @@ def main():
                     all_bullets.remove(bullet)
                 for explosion in explosions[:]:
                     explosions.remove(explosion)
-                records_file.write(f"\n")
-                records_file.write(f"{int(player.get_points())} ")
+                records_file.write(f"\n{int(player.get_points())} ")
                 records_file.write(f"{str(datetime.date.today())}")
                 
 
