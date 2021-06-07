@@ -377,7 +377,11 @@ class Player(Ship):
 
 
 
-    def border_pass(self):
+    def off(self):
+        global multiplier
+        self.health -= 20
+        self.flawless=False
+        multiplier=1
         self.points-=50
         
 
@@ -709,7 +713,7 @@ def main():
     records=False
     victory=False
     ship_option=0
-
+    boss_level=False
     levels = []
     strint = 0
     strint2 = 0
@@ -822,12 +826,6 @@ def main():
         WINDOW.blit(HP_BORDER,(HP_POS_X,HP_POS_Y))
         pygame.display.update()
 
-    def off():
-        global multiplier
-        player.health -= 5
-        player.flawless=False
-        multiplier=1
-        player.border_pass()
 
     pygame.mixer.music.set_volume(0.05)
     pygame.mixer.music.play(-1)
@@ -961,6 +959,7 @@ def main():
                         strint3 = int(tempfloat*HEIGHT)
                         enemy = Enemy(strint2,strint3)
                         enemies.append(enemy)
+                        boss_level=False
                     elif strint==2:
                         tempfloat = float(levels[level_nr+2][i])
                         strint2 = int(tempfloat*WIDTH)
@@ -969,12 +968,14 @@ def main():
                         enemy_charge = Enemy_Charge(strint2,strint3)
                         enemies_charge.append(enemy_charge)
                     elif strint==3:
+                        boss_level=False
                         tempfloat = float(levels[level_nr+2][i])
                         strint2 = int(tempfloat*WIDTH)
                         tempfloat = float(levels[level_nr+1][i])
                         strint3 = int(tempfloat*HEIGHT)
                         enemy = Enemy_Spread(strint2,strint3)
                         enemies.append(enemy)
+                        boss_level=False
                     elif strint==4:
                         tempfloat = float(levels[level_nr+2][i])
                         strint2 = int(tempfloat*WIDTH)
@@ -984,6 +985,7 @@ def main():
                         pygame.mixer.music.unload
                         pygame.mixer.music.load("assets/boss_music.mp3")
                         pygame.mixer.music.play(-1)
+                        boss_level=True
 
 
                         enemies.append(enemy)
@@ -1006,7 +1008,7 @@ def main():
             player.move_bullet(-10, enemies,explosions)
             player.move_bullet(0, enemies_charge,explosions)
             for enemy in enemies[:]:
-                if level==3:
+                if boss_level==True:
                     enemy.shoot(all_bullets,all_bombs)
                     if collide(enemy,player):
                        player.get_hit(3)
@@ -1016,9 +1018,9 @@ def main():
                 enemy.cooldown()
                 if enemy.health<=0:
                    enemies.remove(enemy)
-                if enemy.y + enemy.get_height() > HEIGHT and level!=3:
+                if enemy.y + enemy.get_height() > HEIGHT and boss_level==False:
                     enemies.remove(enemy)
-                    off()
+                    player.off()
 
             
 
@@ -1032,7 +1034,7 @@ def main():
                     
                 if enemy_charge.y + enemy_charge.get_height() > HEIGHT:
                     enemies_charge.remove(enemy_charge)
-                    off()
+                    player.off()
 
             for bullet in all_bullets[:]:
                 bullet.move(bullet_vel)
