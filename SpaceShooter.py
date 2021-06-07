@@ -603,11 +603,6 @@ class Enemy_Charge(Ship):
         self.on_board= False
         self.health=100
         self.direction = random.randrange(1,11)
-        
-        if self.x>WIDTH/2:
-            self.x=random.randrange(0,GAMEPLAY_BORDER)
-        else:
-            self.x=random.randrange(WIDTH-GAMEPLAY_BORDER,WIDTH)
 
     def move(self, vel,obj):
         if obj.x<self.x<obj.x+10:
@@ -792,7 +787,7 @@ def main():
             else:
                 explosion.anim()
 
-        if lazy_timer>60 and level!=3:
+        if lazy_timer>60 and level!=10:
             player.points-=10
             lazy_timer=0
         else:
@@ -926,7 +921,7 @@ def main():
                 pygame.mixer.music.unload
                 pygame.mixer.music.load("assets/lost_theme.mp3")
                 pygame.mixer.music.play(-1)
-            if level==3 and len(enemies)+len(enemies_charge) == 0:
+            if level==10 and len(enemies)+len(enemies_charge) == 0:
                 ending_screen=True
                 player.points+=2000*multiplier
                 pygame.mixer.music.unload
@@ -948,8 +943,8 @@ def main():
 
             elif len(enemies)+len(enemies_charge) == 0:
                 level += 1
-                level_version = random.randrange(0,2)
-                level_nr = (level-1)*6+level_version*3
+                level_version = random.randrange(0,3)
+                level_nr = (level-1)*9+level_version*3
                 for i in range(len(levels[level_nr])):
                     strint = int(levels[level_nr][i])
                     if strint==1:
