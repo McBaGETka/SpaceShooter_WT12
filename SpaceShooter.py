@@ -315,7 +315,7 @@ class Ship:
         return self.ship_img.get_height()
 
 class Player(Ship):
-    def __init__(self,x,y,ship_options, health=100):
+    def __init__(self,x,y,ship_options, health=500):
         super().__init__(x,y)
         if ship_options==0:
             self.ship_img=SHIP1[ex_count//20]
@@ -327,6 +327,7 @@ class Player(Ship):
             self.ship_img=SHIP4[ex_count//20]
         self.bullet_img=PLAYER_BULLET
         self.mask = pygame.mask.from_surface(self.ship_img)
+        self.health = health
         self.max_health = health
         self.points=0
         self.flawless=True
@@ -485,10 +486,10 @@ class Boss(Ship):
                 bullet = Bullet(self.x+int(self.get_width()*0.14), self.y+BOSS_Y, self.bullet_img)
                 bullet2 = Bullet(self.x+int(self.get_width()*0.28), self.y+BOSS_Y, self.bullet_img)
                 bullet3 = Bullet(self.x+int(self.get_width()*0.42), self.y+BOSS_Y, self.bullet_img)
-                bullet4 = Bullet(self.x+int(self.get_width()/2), self.y+BOSS_Y, self.bullet_img)
-                bullet5 = Bullet(self.x+int(self.get_width()*0.64), self.y+BOSS_Y, self.bullet_img)
-                bullet6 = Bullet(self.x+int(self.get_width()*0.78), self.y+BOSS_Y, self.bullet_img)
-                bullet7 = Bullet(self.x+int(self.get_width()*0.92), self.y+BOSS_Y, self.bullet_img)
+                bullet4 = Bullet(self.x+int(self.get_width()*0.56), self.y+BOSS_Y, self.bullet_img)
+                bullet5 = Bullet(self.x+int(self.get_width()*0.70), self.y+BOSS_Y, self.bullet_img)
+                bullet6 = Bullet(self.x+int(self.get_width()*0.84), self.y+BOSS_Y, self.bullet_img)
+                bullet7 = Bullet(self.x+int(self.get_width()*0.98), self.y+BOSS_Y, self.bullet_img)
                 objs.append(bullet)
                 objs.append(bullet2)
                 objs.append(bullet3)
@@ -690,9 +691,9 @@ def records_showcase(tab,window):
         else:
             date =showcase_font.render("--------", 1, (255,174,0))
             score=showcase_font.render("--------", 1, (255,174,0))
-        window.blit(number, (WIDTH/2-270-number.get_rect().width/2,300+65*i))
-        window.blit(date, (WIDTH/2+30-date.get_rect().width/2,300+65*i))
-        window.blit(score, (WIDTH/2+330-score.get_rect().width/2,300+65*i))
+        window.blit(number, (WIDTH/2-int(WIDTH*0.14)-number.get_rect().width/2,int(WIDTH*0.156)+65*i))
+        window.blit(date, (WIDTH/2+int(WIDTH*0.015)-date.get_rect().width/2,int(WIDTH*0.156)+65*i))
+        window.blit(score, (WIDTH/2+int(WIDTH*0.171)-score.get_rect().width/2,int(WIDTH*0.156)+65*i))
         i+=1
 
 
@@ -811,9 +812,9 @@ def main():
 
         
         
-        WINDOW.blit(score_label, (WIDTH-250-score_label.get_rect().width/2,250))
-        WINDOW.blit(combo, (WIDTH-250-combo.get_rect().width/2,350))
-        WINDOW.blit(level_label, (380,280))
+        WINDOW.blit(score_label, (WIDTH-int(WIDTH*0.13)-score_label.get_rect().width/2,int(HEIGHT*0.231)))
+        WINDOW.blit(combo, (WIDTH-int(WIDTH*0.13)-combo.get_rect().width/2,int(HEIGHT*0.324)))
+        WINDOW.blit(level_label, (int(WIDTH*0.197),int(HEIGHT*0.259)))
 
         player.anim(ex_count,ship_option)
         player.draw(WINDOW)
