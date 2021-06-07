@@ -315,7 +315,7 @@ class Ship:
         return self.ship_img.get_height()
 
 class Player(Ship):
-    def __init__(self,x,y,ship_options, health=500):
+    def __init__(self,x,y,ship_options, health=200):
         super().__init__(x,y)
         if ship_options==0:
             self.ship_img=SHIP1[ex_count//20]
