@@ -331,7 +331,7 @@ class Ship:
         return self.ship_img.get_height()
 
 class Player(Ship):
-    def __init__(self,x,y,ship_options, health=500):
+    def __init__(self,x,y,ship_options, health=1000):
         super().__init__(x,y)
         if ship_options==0:
             self.ship_img=SHIP1[ex_count//20]
@@ -1015,8 +1015,7 @@ def main():
                 player.y -= player_vel
             if keys[pygame.K_s] and player.y + player_vel + player.get_height() < HEIGHT:
                 player.y += player_vel
-            if keys[pygame.K_SPACE]:
-                player.shoot()
+           
             if keys[pygame.K_ESCAPE]:
                 run=False
 
@@ -1060,7 +1059,8 @@ def main():
                     player.get_hit(10)
                     all_bullets.remove(bullet)
                         
-        
+            if keys[pygame.K_SPACE]:
+                player.shoot()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 records.close()
