@@ -12,6 +12,8 @@ from pygame import mixer
 user32 = ctypes.windll.user32
 
 
+#WIDTH =  1200
+#HEIGHT =  700
 WIDTH =  user32.GetSystemMetrics(0)
 HEIGHT =  user32.GetSystemMetrics(1)
 
@@ -40,6 +42,15 @@ HP_POS_Y=int(HEIGHT*0.138) #150px
 GAMEPLAY_BORDER=int(WIDTH*0.234) #450px
 GAMEPLAY_BORDER2=int(WIDTH*0.281)
 GAMEPLAY_SITE=WIDTH-2*GAMEPLAY_BORDER
+
+BUTTON_POS1=int(WIDTH*0.164) #px315
+BUTTON_POS2=int(WIDTH*0.013) #px25
+
+M_F=int(WIDTH*0.031) #60px
+S_F=int(WIDTH*0.039) #80
+T_F=int(WIDTH*0.036) #70
+R_F=int(WIDTH*0.052) #100
+
 
 
 #enemy data
@@ -683,7 +694,7 @@ def ship_skin_showcase(x):
         WINDOW.blit(PLAYER_SHIP_YELLOW,(WIDTH/2-SKIN_SHOW/2,HEIGHT/2-SKIN_SHOW_POS))
 
 def records_showcase(tab,window):
-    showcase_font = pygame.font.SysFont("agency_fb", 60)
+    showcase_font = pygame.font.SysFont("agency_fb", M_F)
     i=0
     while i<=9:
         number = showcase_font.render(f"{i+1}", 1, (255,174,0))
@@ -693,9 +704,9 @@ def records_showcase(tab,window):
         else:
             date =showcase_font.render("--------", 1, (255,174,0))
             score=showcase_font.render("--------", 1, (255,174,0))
-        window.blit(number, (WIDTH/2-int(WIDTH*0.14)-number.get_rect().width/2,int(WIDTH*0.156)+65*i))
-        window.blit(date, (WIDTH/2+int(WIDTH*0.015)-date.get_rect().width/2,int(WIDTH*0.156)+65*i))
-        window.blit(score, (WIDTH/2+int(WIDTH*0.171)-score.get_rect().width/2,int(WIDTH*0.156)+65*i))
+        window.blit(number, (WIDTH/2-int(WIDTH*0.14)-number.get_rect().width/2,int(WIDTH*0.156)+(M_F+5)*i))
+        window.blit(date, (WIDTH/2+int(WIDTH*0.015)-date.get_rect().width/2,int(WIDTH*0.156)+(M_F+5)*i))
+        window.blit(score, (WIDTH/2+int(WIDTH*0.171)-score.get_rect().width/2,int(WIDTH*0.156)+(M_F+5)*i))
         i+=1
 
 
@@ -739,10 +750,11 @@ def main():
     explosions=[]
     all_bombs=[]
 
-    main_font = pygame.font.SysFont("agency_fb", 80)
-    second_font = pygame.font.SysFont("agency_fb", 120)
-    third_font = pygame.font.SysFont("agency_fb", 70)
-    record_font = pygame.font.SysFont("agency_fb", 100)
+    main_font = pygame.font.SysFont("agency_fb", S_F)
+    second_font = pygame.font.SysFont("agency_fb", M_F*2)
+    third_font = pygame.font.SysFont("agency_fb", T_F)
+    record_font = pygame.font.SysFont("agency_fb", R_F)
+
 
     player = Player(WIDTH/2-45,650,ship_option)
 
@@ -759,12 +771,12 @@ def main():
     lost = False
     lost_count = 0
 
-    start_button=Button(WIDTH/2-315 , HEIGHT/2+200, START_BUTTON)
-    option_button=Button(WIDTH/2+25 , HEIGHT/2+200, OPTIONS_BUTTON)
-    records_button=Button(WIDTH/2-315 , HEIGHT/2+300, RECORDS_BUTTON)
-    exit_button=Button(WIDTH/2+25 , HEIGHT/2+300, EXIT_BUTTON)
-    arrow_l=Button(WIDTH/2-250 , HEIGHT/2+250, ARROW_LEFT)
-    arrow_r=Button(WIDTH/2+50 , HEIGHT/2+250, ARROW_RIGHT)
+    start_button=Button(WIDTH/2-BUTTON_POS1 , HEIGHT/2+BUTTON_2, START_BUTTON)
+    option_button=Button(WIDTH/2+BUTTON_POS2 , HEIGHT/2+BUTTON_2, OPTIONS_BUTTON)
+    records_button=Button(WIDTH/2-BUTTON_POS1 , HEIGHT/2+HP_BOR_X, RECORDS_BUTTON)
+    exit_button=Button(WIDTH/2+BUTTON_POS2 , HEIGHT/2+HP_BOR_X, EXIT_BUTTON)
+    arrow_l=Button(WIDTH/2-SKIN_SHOW_POS , HEIGHT/2+SKIN_SHOW_POS, ARROW_LEFT)
+    arrow_r=Button(WIDTH/2+BUTTON_POS2*2 , HEIGHT/2+SKIN_SHOW_POS, ARROW_RIGHT)
     back_button=Button(0,0, BACK_BUTTON)
 
     clock = pygame.time.Clock()
