@@ -43,6 +43,9 @@ GAMEPLAY_BORDER=int(WIDTH*0.234) #450px
 GAMEPLAY_BORDER2=int(WIDTH*0.281)
 GAMEPLAY_SITE=WIDTH-2*GAMEPLAY_BORDER
 
+ENDING1=int(HEIGHT*0.416)
+ENDING2=int(HEIGHT*0.601)
+
 BUTTON_POS1=int(WIDTH*0.164) #px315
 BUTTON_POS2=int(WIDTH*0.013) #px25
 
@@ -906,8 +909,8 @@ def main():
                 
                
               
-            WINDOW.blit(score_label, (WIDTH/2-score_label.get_rect().width/2,450))
-            WINDOW.blit(restart, (WIDTH/2-restart.get_rect().width/2,650))
+            WINDOW.blit(score_label, (WIDTH/2-score_label.get_rect().width/2,ENDING1))
+            WINDOW.blit(restart, (WIDTH/2-restart.get_rect().width/2,ENDING2))
             pygame.display.update()
             if keys[pygame.K_e]:
                 run=False
