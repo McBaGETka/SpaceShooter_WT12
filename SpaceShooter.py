@@ -14,11 +14,11 @@ user32 = ctypes.windll.user32
 
 WIDTH =  user32.GetSystemMetrics(0)
 HEIGHT =  user32.GetSystemMetrics(1)
-#print(WIDTH,HEIGHT)
 
 pygame.display.set_caption('SpaceShooter')
-WINDOW=pygame.display.set_mode((WIDTH,HEIGHT),pygame.FULLSCREEN)
+WINDOW=pygame.display.set_mode((WIDTH,HEIGHT),pygame.NOFRAME)
 mixer.init()
+
 #resolution variables
 ENEMY_VAR=int(WIDTH*0.039) #75px
 ENEMY_S_VAR=int(WIDTH*0.02) #40ox
@@ -38,7 +38,9 @@ HP_POS_X=int(WIDTH*0.052) #100px
 HP_POS_Y=int(HEIGHT*0.138) #150px
 
 GAMEPLAY_BORDER=int(WIDTH*0.234) #450px
+GAMEPLAY_BORDER2=int(WIDTH*0.281)
 GAMEPLAY_SITE=WIDTH-2*GAMEPLAY_BORDER
+
 
 #enemy data
 ENEMY_SHIP=pygame.transform.scale(pygame.image.load(os.path.join("assets", "przeciwnik.png")).convert_alpha(),(ENEMY_VAR,ENEMY_VAR))
@@ -315,7 +317,7 @@ class Ship:
         return self.ship_img.get_height()
 
 class Player(Ship):
-    def __init__(self,x,y,ship_options, health=200):
+    def __init__(self,x,y,ship_options, health=500):
         super().__init__(x,y)
         if ship_options==0:
             self.ship_img=SHIP1[ex_count//20]
@@ -396,8 +398,8 @@ class Player(Ship):
 
 
     def healthbar(self, window):
-        pygame.draw.rect(window, (255,0,0), (HP_POS_X, HP_POS_Y, 300, 50))
-        pygame.draw.rect(window, (0,255,0), (HP_POS_X, HP_POS_Y, 300* (self.health/self.max_health), 50))
+        pygame.draw.rect(window, (255,0,0), (HP_POS_X, HP_POS_Y, HP_BOR_X, HP_BOR_Y))
+        pygame.draw.rect(window, (0,255,0), (HP_POS_X, HP_POS_Y, HP_BOR_X* (self.health/self.max_health), HP_BOR_Y))
 
 
 class Enemy(Ship):
@@ -807,6 +809,8 @@ def main():
         score_label = main_font.render(f"{int(player.get_points())}", 1, (255,174,0))
         combo = main_font.render(f"x{multiplier}", 1, (255,174,0))
         level_label = main_font.render(f"{level}", 1, (255,174,0))
+        
+        
         WINDOW.blit(OVERLAY, (0,0))
 
 
@@ -818,6 +822,7 @@ def main():
 
         player.anim(ex_count,ship_option)
         player.draw(WINDOW)
+        
 
         WINDOW.blit(HP_BORDER,(HP_POS_X,HP_POS_Y))
         pygame.display.update()
@@ -896,7 +901,7 @@ def main():
                 run=False
             if keys[pygame.K_r]:
                 player = Player(WIDTH/2-45,650,ship_option)
-                player.health=100
+                player.health=500
                 enemies = []
                 enemies_charge = []
                 bullets=[]
@@ -987,9 +992,9 @@ def main():
                         enemies.append(enemy)
   
 
-            if keys[pygame.K_a] and player.x - player_vel > 520:
+            if keys[pygame.K_a] and player.x - player_vel > GAMEPLAY_BORDER2-ENEMY_VAR/2:
                 player.x -= player_vel
-            if keys[pygame.K_d] and player.x + player_vel + player.get_width() < WIDTH-520:
+            if keys[pygame.K_d] and player.x + player_vel + player.get_width() < WIDTH-GAMEPLAY_BORDER2+ENEMY_VAR/2:
                 player.x += player_vel
             if keys[pygame.K_w] and player.y - player_vel > 0:
                 player.y -= player_vel
